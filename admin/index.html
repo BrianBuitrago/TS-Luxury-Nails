@@ -3,213 +3,348 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — Nails Studio</title>
-  <link rel="stylesheet" href="../css/styles.css">
+  <title>Admin — TS Nails Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    .admin-mobile-bar {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 60;
-      background: var(--negro-soft);
-      border-bottom: 1px solid var(--borde);
-      padding: 14px 20px;
-      align-items: center;
-      justify-content: space-between;
+    :root {
+      --negro:#0D0B09; --negro-soft:#1A1713; --negro-card:#201D19;
+      --dorado:#C9A84C; --dorado-light:#E8C97A; --dorado-dark:#9B7A2F; --dorado-glow:rgba(201,168,76,0.1);
+      --madera:#C4956A; --madera-light:#DEB896;
+      --texto:#F0E8D8; --texto-muted:#8A7A68;
+      --borde:rgba(201,168,76,0.18); --borde-hover:rgba(201,168,76,0.45);
+      --success:#7BAE7F; --error:#C97B7B; --warning:#E8A44A;
     }
-    @media(max-width:768px) {
-      .admin-mobile-bar { display: flex; }
-      .admin-main { padding-top: 70px !important; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Jost',sans-serif;background:var(--negro);color:var(--texto);min-height:100vh;}
+    ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--negro);} ::-webkit-scrollbar-thumb{background:var(--dorado-dark);border-radius:3px;}
+
+    /* LOGIN */
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(201,168,76,0.05),transparent),var(--negro);padding:24px;}
+    .login-card{background:var(--negro-card);border:1px solid var(--borde);border-radius:12px;padding:40px;width:100%;max-width:400px;text-align:center;}
+    .login-logo-img{width:90px;height:90px;object-fit:contain;margin-bottom:12px;}
+    .login-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--dorado);letter-spacing:2px;margin-bottom:2px;}
+    .login-sub{font-size:0.68rem;letter-spacing:4px;color:var(--madera);text-transform:uppercase;margin-bottom:28px;}
+    .login-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--texto-muted);font-size:0.75rem;}
+    .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--borde);}
+    .btn-google{width:100%;padding:12px;background:white;color:#333;border:none;border-radius:4px;font-family:'Jost',sans-serif;font-size:0.88rem;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;margin-bottom:4px;}
+    .btn-google:hover{background:#f5f5f5;transform:translateY(-1px);}
+
+    /* ADMIN LAYOUT */
+    .admin-layout{display:flex;min-height:100vh;}
+    .sidebar{width:230px;background:var(--negro-soft);border-right:1px solid var(--borde);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:50;display:flex;flex-direction:column;}
+    .sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid var(--borde);}
+    .sidebar-logo-img{width:38px;height:38px;object-fit:contain;}
+    .sidebar-logo-text{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--dorado);letter-spacing:2px;}
+    .sidebar-logo-sub{font-size:0.58rem;letter-spacing:3px;color:var(--madera);text-transform:uppercase;}
+    .sidebar-user{padding:12px 18px;border-bottom:1px solid var(--borde);background:var(--dorado-glow);}
+    .sidebar-user-name{font-size:0.82rem;color:var(--texto);font-weight:500;}
+    .sidebar-user-role{font-size:0.68rem;color:var(--madera);letter-spacing:1px;}
+    .sidebar-nav{padding:8px 0;flex:1;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:11px 18px;text-decoration:none;color:var(--texto-muted);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.2s;border:none;background:none;width:100%;text-align:left;border-right:2px solid transparent;}
+    .nav-item:hover,.nav-item.active{color:var(--dorado);background:var(--dorado-glow);border-right-color:var(--dorado);}
+    .nav-icon{font-size:1rem;width:20px;text-align:center;}
+    .sidebar-bottom{padding:12px 0;border-top:1px solid var(--borde);}
+    .admin-main{margin-left:230px;flex:1;padding:28px;min-height:100vh;}
+    .admin-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+    .admin-page-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--texto);}
+    .admin-page-sub{color:var(--texto-muted);font-size:0.82rem;margin-top:2px;}
+
+    /* CARDS */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
+    .stat-card{background:var(--negro-card);border:1px solid var(--borde);border-radius:8px;padding:18px;}
+    .stat-value{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--dorado);font-weight:700;line-height:1;margin-bottom:3px;}
+    .stat-label{font-size:0.7rem;color:var(--texto-muted);letter-spacing:1px;text-transform:uppercase;}
+    .card-panel{background:var(--negro-card);border:1px solid var(--borde);border-radius:8px;padding:20px;margin-bottom:18px;}
+    .card-panel-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--dorado);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--borde);}
+
+    /* TABLA */
+    .data-table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+    .data-table th{text-align:left;padding:9px 12px;font-size:0.67rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--madera);border-bottom:1px solid var(--borde);font-weight:500;}
+    .data-table td{padding:11px 12px;border-bottom:1px solid rgba(201,168,76,0.06);color:var(--texto);vertical-align:middle;}
+    .data-table tr:hover td{background:rgba(255,255,255,0.015);}
+    .table-wrap{overflow-x:auto;}
+
+    /* BADGES */
+    .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:0.67rem;font-weight:600;letter-spacing:0.5px;}
+    .badge-pendiente{background:rgba(232,164,74,0.12);color:var(--warning);border:1px solid rgba(232,164,74,0.3);}
+    .badge-confirmada{background:rgba(123,174,127,0.12);color:var(--success);border:1px solid rgba(123,174,127,0.3);}
+    .badge-cancelada{background:rgba(201,123,123,0.12);color:var(--error);border:1px solid rgba(201,123,123,0.3);}
+
+    /* BOTONES */
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;border-radius:3px;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;text-decoration:none;transition:all 0.2s;}
+    .btn-gold{background:var(--dorado);color:var(--negro);}
+    .btn-gold:hover{background:var(--dorado-light);}
+    .btn-outline{background:transparent;color:var(--dorado);border:1px solid var(--borde-hover);}
+    .btn-outline:hover{background:var(--dorado-glow);}
+    .btn-danger{background:rgba(201,123,123,0.15);color:var(--error);border:1px solid rgba(201,123,123,0.3);}
+    .btn-danger:hover{background:var(--error);color:white;}
+    .btn-success{background:rgba(123,174,127,0.15);color:var(--success);border:1px solid rgba(123,174,127,0.3);}
+    .btn-success:hover{background:var(--success);color:white;}
+    .btn-sm{padding:6px 12px;font-size:0.7rem;}
+    .btn-full{width:100%;justify-content:center;}
+
+    /* FORM */
+    .form-group{margin-bottom:15px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .form-label{display:block;font-size:0.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--madera);margin-bottom:5px;font-weight:500;}
+    .form-input,.form-select,.form-textarea{width:100%;padding:10px 13px;background:var(--negro-soft);border:1px solid var(--borde);border-radius:4px;color:var(--texto);font-family:'Jost',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s;}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--dorado);box-shadow:0 0 0 2px rgba(201,168,76,0.07);}
+    .form-select option{background:var(--negro-card);}
+    .form-textarea{resize:vertical;min-height:70px;}
+
+    /* TOGGLE */
+    .toggle-switch{position:relative;width:40px;height:22px;cursor:pointer;}
+    .toggle-switch input{opacity:0;width:0;height:0;}
+    .toggle-track{position:absolute;inset:0;background:var(--borde);border-radius:22px;transition:background 0.3s;}
+    .toggle-switch input:checked+.toggle-track{background:var(--dorado);}
+    .toggle-track::before{content:'';position:absolute;width:16px;height:16px;background:white;border-radius:50%;top:3px;left:3px;transition:transform 0.3s;}
+    .toggle-switch input:checked+.toggle-track::before{transform:translateX(18px);}
+
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center;padding:16px;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--negro-card);border:1px solid var(--borde);border-radius:10px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--borde);display:flex;align-items:flex-start;justify-content:space-between;}
+    .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--dorado);}
+    .modal-subtitle{font-size:0.78rem;color:var(--texto-muted);margin-top:2px;}
+    .modal-close{background:transparent;border:1px solid var(--borde);color:var(--texto-muted);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:0.9rem;transition:all 0.2s;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+    .modal-close:hover{border-color:var(--error);color:var(--error);}
+    .modal-body{padding:20px 24px;}
+    .modal-footer{padding:12px 24px 20px;display:flex;gap:10px;}
+
+    /* SLOTS ADMIN */
+    .hora-block{padding:8px;border:1px solid var(--borde);border-radius:3px;font-size:0.78rem;text-align:center;cursor:pointer;transition:all 0.2s;color:var(--texto);}
+    .hora-block:hover{border-color:var(--dorado);color:var(--dorado);}
+    .hora-block.blocked{background:rgba(201,123,123,0.12);border-color:var(--error);color:var(--error);}
+
+    /* TOAST */
+    .toast-container{position:fixed;top:20px;right:18px;z-index:500;display:flex;flex-direction:column;gap:7px;}
+    .toast{padding:10px 16px;border-radius:5px;font-size:0.82rem;font-weight:500;min-width:220px;animation:toastIn 0.3s ease;display:flex;align-items:center;gap:7px;}
+    .toast-success{background:rgba(123,174,127,0.12);border:1px solid var(--success);color:var(--success);}
+    .toast-error{background:rgba(201,123,123,0.12);border:1px solid var(--error);color:var(--error);}
+    .toast-info{background:var(--dorado-glow);border:1px solid var(--borde-hover);color:var(--dorado);}
+    @keyframes toastIn{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+
+    /* PAGES */
+    .admin-page{display:none;}
+    .admin-page.active{display:block;}
+
+    /* MOBILE */
+    .mobile-bar{display:none;position:fixed;top:0;left:0;right:0;z-index:60;background:var(--negro-soft);border-bottom:1px solid var(--borde);padding:12px 18px;align-items:center;justify-content:space-between;}
+    @media(max-width:768px){
+      .sidebar{transform:translateX(-100%);transition:transform 0.3s;}
+      .sidebar.open{transform:translateX(0);}
+      .admin-main{margin-left:0;padding:80px 16px 20px;}
+      .mobile-bar{display:flex;}
+      .form-row{grid-template-columns:1fr;}
     }
-    .inv-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--borde); }
-    .inv-name { font-size:0.9rem; color:var(--texto); }
-    .inv-stock { font-size:0.85rem; color:var(--texto-muted); }
-    .stock-badge { padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; }
-    .stock-ok { background:rgba(123,174,127,0.15); color:var(--success); }
-    .stock-low { background:rgba(232,164,74,0.15); color:var(--warning); }
-    .stock-out { background:rgba(201,123,123,0.15); color:var(--error); }
-    .hora-block { padding:6px 10px; border:1px solid var(--borde); border-radius:4px; font-size:0.78rem; text-align:center; cursor:pointer; transition:all 0.2s; }
-    .hora-block.blocked { background:rgba(201,123,123,0.15); border-color:var(--error); color:var(--error); }
-    .hora-block:hover { border-color:var(--dorado); }
-    .reserva-img { max-width:80px; max-height:60px; border-radius:4px; cursor:pointer; border:1px solid var(--borde); }
+
+    /* HORARIOS GRID */
+    .horarios-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+    .horario-day{background:var(--negro-soft);border:1px solid var(--borde);border-radius:8px;padding:16px;}
+    .horario-day-name{font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--madera);margin-bottom:10px;}
+
+    /* PERFIL */
+    .profile-avatar{width:70px;height:70px;border-radius:50%;background:var(--dorado-glow);border:2px solid var(--dorado);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 14px;}
   </style>
 </head>
 <body>
 
-<!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
 
 <!-- LOGIN -->
-<div id="loginScreen" class="login-wrap">
-  <div class="login-card">
-    <p class="login-logo">Nails Studio</p>
-    <p class="login-sub">Panel Administrativo</p>
-    <div class="form-group">
-      <label class="form-label">Correo</label>
-      <input type="email" class="form-input" id="loginEmail" placeholder="admin@nailsstudio.com">
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-card">
+      <img class="login-logo-img" id="loginLogo" src="" alt="TS Nails Studio">
+      <p class="login-title">TS Nails Studio</p>
+      <p class="login-sub">Panel Administrativo</p>
+
+      <!-- Login con Google -->
+      <button class="btn-google" onclick="loginWithGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 01-7.18-2.54H1.83v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 010-3.04V5.41H1.83a8 8 0 000 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.3z"/></svg>
+        Ingresar con Google
+      </button>
+
+      <div class="login-divider">o con usuario y contraseña</div>
+
+      <div class="form-group" style="text-align:left;">
+        <label class="form-label">Usuario / Correo</label>
+        <input type="email" class="form-input" id="loginEmail" placeholder="usuario@nailsstudio.com" onkeydown="if(event.key==='Enter')loginWithEmail()">
+      </div>
+      <div class="form-group" style="text-align:left;">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginWithEmail()">
+      </div>
+      <button class="btn btn-gold btn-full" onclick="loginWithEmail()" style="margin-top:4px;">Ingresar ✦</button>
+      <p id="loginError" style="color:var(--error);font-size:0.78rem;margin-top:12px;display:none;"></p>
     </div>
-    <div class="form-group">
-      <label class="form-label">Contraseña</label>
-      <input type="password" class="form-input" id="loginPass" placeholder="••••••••"
-        onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn btn-gold btn-full" onclick="doLogin()" style="margin-top:8px;">Ingresar ✦</button>
-    <p style="font-size:0.72rem;color:var(--texto-muted);margin-top:16px;line-height:1.6;">
-      Primer acceso: configura tu email y contraseña<br>en Firebase Authentication Console.
-    </p>
   </div>
 </div>
 
 <!-- ADMIN PANEL -->
 <div id="adminPanel" style="display:none;" class="admin-layout">
 
-  <!-- Mobile bar -->
-  <div class="admin-mobile-bar">
-    <div class="logo">
-      <span class="logo-main" style="font-size:1rem;">Nails Studio</span>
-    </div>
-    <button onclick="document.getElementById('sidebar').classList.toggle('open')" style="background:none;border:1px solid var(--borde);color:var(--dorado);padding:6px 12px;border-radius:4px;cursor:pointer;">☰</button>
+  <!-- MOBILE BAR -->
+  <div class="mobile-bar">
+    <span style="font-family:'Cormorant Garamond',serif;color:var(--dorado);font-size:1rem;letter-spacing:2px;">TS Nails Admin</span>
+    <button onclick="document.getElementById('sidebar').classList.toggle('open')" style="background:none;border:1px solid var(--borde);color:var(--dorado);padding:6px 10px;border-radius:3px;cursor:pointer;">☰</button>
   </div>
 
   <!-- SIDEBAR -->
-  <aside class="admin-sidebar" id="sidebar">
-    <div class="admin-logo">
-      <div class="logo">
-        <span class="logo-main">Nails Studio</span>
-        <span class="logo-sub">Admin</span>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="display:flex;align-items:center;gap:10px;">
+      <img class="sidebar-logo-img" id="sidebarLogo" src="" alt="">
+      <div>
+        <div class="sidebar-logo-text">TS Nails</div>
+        <div class="sidebar-logo-sub">Admin</div>
       </div>
     </div>
-    <ul class="sidebar-nav">
-      <li><a href="#" onclick="showPage('dashboard')" class="active" id="nav-dashboard"><span class="nav-icon">📊</span> Dashboard</a></li>
-      <li><a href="#" onclick="showPage('reservas')" id="nav-reservas"><span class="nav-icon">📅</span> Reservas</a></li>
-      <li><a href="#" onclick="showPage('servicios')" id="nav-servicios"><span class="nav-icon">💅</span> Servicios</a></li>
-      <li><a href="#" onclick="showPage('categorias')" id="nav-categorias"><span class="nav-icon">🏷️</span> Categorías</a></li>
-      <li><a href="#" onclick="showPage('productos')" id="nav-productos"><span class="nav-icon">🛒</span> Productos</a></li>
-      <li><a href="#" onclick="showPage('horarios')" id="nav-horarios"><span class="nav-icon">🕐</span> Horarios</a></li>
-      <li><a href="#" onclick="showPage('bloqueados')" id="nav-bloqueados"><span class="nav-icon">🚫</span> Bloquear Fechas</a></li>
-      <li style="margin-top:auto;padding-top:20px;border-top:1px solid var(--borde);margin-top:20px;">
-        <a href="../index.html"><span class="nav-icon">🌐</span> Ver Página</a>
-      </li>
-      <li><a href="#" onclick="doLogout()"><span class="nav-icon">🚪</span> Cerrar Sesión</a></li>
-    </ul>
+    <div class="sidebar-user">
+      <div class="sidebar-user-name" id="sidebarUserName">Cargando...</div>
+      <div class="sidebar-user-role" id="sidebarUserRole">Administrador</div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')"><span class="nav-icon">📊</span> Dashboard</button>
+      <button class="nav-item" id="nav-reservas" onclick="showPage('reservas')"><span class="nav-icon">📅</span> Reservas</button>
+      <button class="nav-item" id="nav-servicios" onclick="showPage('servicios')"><span class="nav-icon">💅</span> Servicios</button>
+      <button class="nav-item" id="nav-categorias" onclick="showPage('categorias')"><span class="nav-icon">🏷️</span> Categorías</button>
+      <button class="nav-item" id="nav-horarios" onclick="showPage('horarios')"><span class="nav-icon">🕐</span> Horarios</button>
+      <button class="nav-item" id="nav-bloqueados" onclick="showPage('bloqueados')"><span class="nav-icon">🚫</span> Bloquear Horas</button>
+      <button class="nav-item" id="nav-perfil" onclick="showPage('perfil')"><span class="nav-icon">👤</span> Mi Perfil</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="../index.html" class="nav-item" style="display:flex;"><span class="nav-icon">🌐</span> Ver Página Web</a>
+      <button class="nav-item" onclick="doLogout()"><span class="nav-icon">🚪</span> Cerrar Sesión</button>
+    </div>
   </aside>
 
-  <!-- MAIN -->
+  <!-- MAIN CONTENT -->
   <main class="admin-main">
 
-    <!-- ── DASHBOARD ─────────────────────────────────── -->
+    <!-- DASHBOARD -->
     <div class="admin-page active" id="page-dashboard">
-      <p class="admin-page-title">Dashboard</p>
-      <p class="admin-page-sub">Resumen de tu negocio</p>
+      <div class="admin-topbar">
+        <div><p class="admin-page-title">Dashboard</p><p class="admin-page-sub">Resumen de TS Nails Studio</p></div>
+      </div>
       <div class="stats-grid" id="statsGrid">
-        <div class="stat-card"><p class="stat-value" id="statTotal">—</p><p class="stat-label">Reservas Totales</p></div>
-        <div class="stat-card"><p class="stat-value" id="statPendientes">—</p><p class="stat-label">Pendientes</p></div>
-        <div class="stat-card"><p class="stat-value" id="statHoy">—</p><p class="stat-label">Citas Hoy</p></div>
-        <div class="stat-card"><p class="stat-value" id="statIngresos">—</p><p class="stat-label">Ingresos Est.</p></div>
+        <div class="stat-card"><p class="stat-value" id="stTotal">—</p><p class="stat-label">Total Reservas</p></div>
+        <div class="stat-card"><p class="stat-value" id="stPendientes">—</p><p class="stat-label">Pendientes</p></div>
+        <div class="stat-card"><p class="stat-value" id="stHoy">—</p><p class="stat-label">Citas Hoy</p></div>
+        <div class="stat-card"><p class="stat-value" id="stIngresos">—</p><p class="stat-label">Ingresos Est.</p></div>
       </div>
       <div class="card-panel">
-        <p class="card-panel-title">Próximas Reservas</p>
-        <div id="proximas"></div>
+        <p class="card-panel-title">Próximas Citas</p>
+        <div id="proximasList"></div>
       </div>
     </div>
 
-    <!-- ── RESERVAS ──────────────────────────────────── -->
+    <!-- RESERVAS -->
     <div class="admin-page" id="page-reservas">
-      <p class="admin-page-title">Gestión de Reservas</p>
-      <p class="admin-page-sub">Administra todas las citas</p>
-      <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
-        <select class="form-select" style="width:auto;" id="filterEstado" onchange="loadReservas()">
-          <option value="">Todos los estados</option>
-          <option value="pendiente">Pendientes</option>
-          <option value="confirmada">Confirmadas</option>
-          <option value="cancelada">Canceladas</option>
-        </select>
-        <input type="date" class="form-input" style="width:auto;" id="filterFecha" onchange="loadReservas()">
-        <button class="btn btn-outline btn-sm" onclick="document.getElementById('filterEstado').value='';document.getElementById('filterFecha').value='';loadReservas()">Limpiar</button>
+      <div class="admin-topbar">
+        <div><p class="admin-page-title">Reservas</p><p class="admin-page-sub">Gestiona todas las citas</p></div>
       </div>
-      <div class="card-panel" style="overflow-x:auto;">
-        <table class="data-table" id="reservasTable">
-          <thead>
-            <tr>
-              <th>Fecha / Hora</th>
-              <th>Cliente</th>
-              <th>Servicios</th>
-              <th>Total</th>
-              <th>Pago</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="reservasTbody"></tbody>
-        </table>
+      <div class="card-panel" style="margin-bottom:16px;padding:14px 20px;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <select class="form-select" style="width:auto;" id="filterEstado" onchange="loadReservas()">
+            <option value="">Todos los estados</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="confirmada">Confirmadas</option>
+            <option value="cancelada">Canceladas</option>
+          </select>
+          <input type="date" class="form-input" style="width:auto;" id="filterFecha" onchange="loadReservas()">
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('filterEstado').value='';document.getElementById('filterFecha').value='';loadReservas()">Limpiar</button>
+        </div>
+      </div>
+      <div class="card-panel">
+        <div class="table-wrap"><table class="data-table" id="reservasTable">
+          <thead><tr><th>Fecha / Hora</th><th>Cliente</th><th>Servicios</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="reservasTbody"><tr><td colspan="6" style="text-align:center;color:var(--texto-muted);padding:20px;">Cargando...</td></tr></tbody>
+        </table></div>
       </div>
     </div>
 
-    <!-- ── SERVICIOS ─────────────────────────────────── -->
+    <!-- SERVICIOS -->
     <div class="admin-page" id="page-servicios">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <p class="admin-page-title">Servicios</p>
+      <div class="admin-topbar">
+        <div><p class="admin-page-title">Servicios</p><p class="admin-page-sub">Crea y gestiona servicios</p></div>
         <button class="btn btn-gold btn-sm" onclick="openServicioModal()">+ Nuevo Servicio</button>
       </div>
-      <p class="admin-page-sub">Crea, edita y gestiona tus servicios</p>
-      <div class="card-panel" style="overflow-x:auto;">
-        <table class="data-table">
+      <div class="card-panel">
+        <div class="table-wrap"><table class="data-table">
           <thead><tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Duración</th><th>Activo</th><th>Acciones</th></tr></thead>
           <tbody id="serviciosTbody"></tbody>
-        </table>
+        </table></div>
       </div>
     </div>
 
-    <!-- ── CATEGORÍAS ────────────────────────────────── -->
+    <!-- CATEGORÍAS -->
     <div class="admin-page" id="page-categorias">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <p class="admin-page-title">Categorías</p>
+      <div class="admin-topbar">
+        <div><p class="admin-page-title">Categorías</p><p class="admin-page-sub">Organiza tus servicios</p></div>
         <button class="btn btn-gold btn-sm" onclick="openCatModal()">+ Nueva Categoría</button>
       </div>
-      <p class="admin-page-sub">Organiza tus servicios por categoría</p>
-      <div class="card-panel">
-        <div id="categoriasList"></div>
-      </div>
+      <div class="card-panel"><div id="categoriasList"></div></div>
     </div>
 
-    <!-- ── PRODUCTOS ─────────────────────────────────── -->
-    <div class="admin-page" id="page-productos">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <p class="admin-page-title">Productos</p>
-        <button class="btn btn-gold btn-sm" onclick="openProductoModal()">+ Nuevo Producto</button>
-      </div>
-      <p class="admin-page-sub">Inventario y venta de productos</p>
-      <div class="card-panel" style="overflow-x:auto;">
-        <table class="data-table">
-          <thead><tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Activo</th><th>Acciones</th></tr></thead>
-          <tbody id="productosTbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ── HORARIOS ──────────────────────────────────── -->
+    <!-- HORARIOS -->
     <div class="admin-page" id="page-horarios">
-      <p class="admin-page-title">Horarios de Atención</p>
-      <p class="admin-page-sub">Habilita o deshabilita días y horarios</p>
+      <div class="admin-topbar">
+        <div><p class="admin-page-title">Horarios</p><p class="admin-page-sub">Configura días y horas de atención</p></div>
+      </div>
       <div class="card-panel">
-        <div id="horariosGrid"></div>
-        <button class="btn btn-gold" style="margin-top:20px;" onclick="saveHorarios()">Guardar Horarios ✦</button>
+        <div class="horarios-grid" id="horariosGrid"></div>
+        <button class="btn btn-gold" style="margin-top:20px;" onclick="saveHorarios()">Guardar Cambios ✦</button>
       </div>
     </div>
 
-    <!-- ── BLOQUEAR FECHAS ───────────────────────────── -->
+    <!-- BLOQUEAR HORAS -->
     <div class="admin-page" id="page-bloqueados">
-      <p class="admin-page-title">Bloquear Horas</p>
-      <p class="admin-page-sub">Bloquea horas específicas en una fecha</p>
-      <div class="card-panel" style="max-width:500px;">
+      <div class="admin-topbar">
+        <div><p class="admin-page-title">Bloquear Horas</p><p class="admin-page-sub">Marca horas no disponibles por fecha</p></div>
+      </div>
+      <div class="card-panel" style="max-width:480px;">
         <div class="form-group">
           <label class="form-label">Selecciona una fecha</label>
           <input type="date" class="form-input" id="blockDate" onchange="loadBlockedDate()">
         </div>
         <div id="blockSlotsWrap" style="display:none;">
-          <p class="form-label" style="margin-bottom:10px;">Horas — Click para bloquear/desbloquear</p>
+          <p class="form-label" style="margin-bottom:10px;">Click para bloquear / desbloquear</p>
           <div id="blockSlots" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;"></div>
-          <button class="btn btn-gold" onclick="saveBlockedSlots()">Guardar ✦</button>
+          <button class="btn btn-gold" onclick="saveBlockedSlots()">Guardar Bloqueos ✦</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="admin-page" id="page-perfil">
+      <div class="admin-topbar">
+        <div><p class="admin-page-title">Mi Perfil</p><p class="admin-page-sub">Gestiona tu cuenta de administrador</p></div>
+      </div>
+      <div class="card-panel" style="max-width:480px;">
+        <div class="profile-avatar" id="profileAvatar">👤</div>
+        <p style="text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--dorado);margin-bottom:2px;" id="profileName">—</p>
+        <p style="text-align:center;font-size:0.78rem;color:var(--texto-muted);margin-bottom:24px;" id="profileEmail">—</p>
+
+        <p class="card-panel-title">Cambiar Contraseña</p>
+        <div class="form-group">
+          <label class="form-label">Nueva Contraseña</label>
+          <input type="password" class="form-input" id="newPass" placeholder="Mínimo 6 caracteres">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmar Nueva Contraseña</label>
+          <input type="password" class="form-input" id="confirmPass" placeholder="Repite la contraseña">
+        </div>
+        <button class="btn btn-gold btn-full" onclick="changePassword()">Cambiar Contraseña ✦</button>
+
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--borde);">
+          <p class="card-panel-title">Información de tu cuenta</p>
+          <p style="font-size:0.82rem;color:var(--texto-muted);line-height:1.8;">
+            🔒 Tu cuenta es gestionada por Firebase Authentication.<br>
+            📧 Para cambiar tu correo, contacta al administrador principal.<br>
+            🚪 Cierra sesión desde el menú lateral.
+          </p>
         </div>
       </div>
     </div>
@@ -217,7 +352,7 @@
   </main>
 </div>
 
-<!-- MODAL: SERVICIO -->
+<!-- MODAL SERVICIO -->
 <div class="modal-overlay" id="servicioModal">
   <div class="modal">
     <div class="modal-header">
@@ -227,37 +362,17 @@
     <div class="modal-body">
       <input type="hidden" id="servicioId">
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nombre del servicio *</label>
-          <input type="text" class="form-input" id="servicioNombre" placeholder="Ej: Manicura Tradicional">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Categoría *</label>
-          <select class="form-select" id="servicioCategoria">
-            <option value="">Selecciona...</option>
-          </select>
-        </div>
+        <div class="form-group"><label class="form-label">Nombre *</label><input type="text" class="form-input" id="servicioNombre" placeholder="Ej: Manicura Tradicional"></div>
+        <div class="form-group"><label class="form-label">Categoría *</label><select class="form-select" id="servicioCategoria"><option value="">Selecciona...</option></select></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Precio (COP) *</label>
-          <input type="number" class="form-input" id="servicioPrecio" placeholder="20000">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Duración (minutos) *</label>
-          <input type="number" class="form-input" id="servicioDuracion" placeholder="60">
-        </div>
+        <div class="form-group"><label class="form-label">Precio (COP) *</label><input type="number" class="form-input" id="servicioPrecio" placeholder="20000"></div>
+        <div class="form-group"><label class="form-label">Duración (min) *</label><input type="number" class="form-input" id="servicioDuracion" placeholder="60"></div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Descripción</label>
-        <textarea class="form-textarea" id="servicioDescripcion" placeholder="Descripción breve del servicio..."></textarea>
-      </div>
+      <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-textarea" id="servicioDescripcion" placeholder="Descripción breve..."></textarea></div>
       <div class="form-group" style="display:flex;align-items:center;gap:12px;">
-        <label class="toggle-switch">
-          <input type="checkbox" id="servicioActivo" checked>
-          <div class="toggle-track"></div>
-        </label>
-        <span style="font-size:0.85rem;color:var(--texto);">Servicio activo (visible en la página)</span>
+        <label class="toggle-switch"><input type="checkbox" id="servicioActivo" checked><div class="toggle-track"></div></label>
+        <span style="font-size:0.84rem;color:var(--texto);">Servicio activo y visible</span>
       </div>
     </div>
     <div class="modal-footer">
@@ -267,7 +382,7 @@
   </div>
 </div>
 
-<!-- MODAL: CATEGORÍA -->
+<!-- MODAL CATEGORÍA -->
 <div class="modal-overlay" id="catModal">
   <div class="modal">
     <div class="modal-header">
@@ -276,14 +391,8 @@
     </div>
     <div class="modal-body">
       <input type="hidden" id="catId">
-      <div class="form-group">
-        <label class="form-label">Nombre de la categoría *</label>
-        <input type="text" class="form-input" id="catNombre" placeholder="Ej: Manicura, Pedicura...">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Orden de aparición</label>
-        <input type="number" class="form-input" id="catOrden" placeholder="1" value="1">
-      </div>
+      <div class="form-group"><label class="form-label">Nombre *</label><input type="text" class="form-input" id="catNombre" placeholder="Ej: Manicura"></div>
+      <div class="form-group"><label class="form-label">Orden de aparición</label><input type="number" class="form-input" id="catOrden" value="1" min="1"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline btn-full" onclick="closeModal('catModal')">Cancelar</button>
@@ -292,73 +401,494 @@
   </div>
 </div>
 
-<!-- MODAL: PRODUCTO -->
-<div class="modal-overlay" id="productoModal">
+<!-- MODAL VER RESERVA -->
+<div class="modal-overlay" id="reservaModal">
   <div class="modal">
     <div class="modal-header">
-      <div><p class="modal-title" id="productoModalTitle">Nuevo Producto</p></div>
-      <button class="modal-close" onclick="closeModal('productoModal')">✕</button>
+      <div><p class="modal-title">Detalle de Cita</p></div>
+      <button class="modal-close" onclick="closeModal('reservaModal')">✕</button>
     </div>
-    <div class="modal-body">
-      <input type="hidden" id="productoId">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nombre *</label>
-          <input type="text" class="form-input" id="productoNombre" placeholder="Nombre del producto">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Emoji / Icono</label>
-          <input type="text" class="form-input" id="productoEmoji" placeholder="💅" maxlength="4">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Precio (COP) *</label>
-          <input type="number" class="form-input" id="productoPrecio" placeholder="20000">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Stock disponible *</label>
-          <input type="number" class="form-input" id="productoStock" placeholder="10">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Descripción</label>
-        <textarea class="form-textarea" id="productoDescripcion" placeholder="Descripción del producto..."></textarea>
-      </div>
-      <div class="form-group" style="display:flex;align-items:center;gap:12px;">
-        <label class="toggle-switch">
-          <input type="checkbox" id="productoActivo" checked>
-          <div class="toggle-track"></div>
-        </label>
-        <span style="font-size:0.85rem;color:var(--texto);">Producto visible en tienda</span>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline btn-full" onclick="closeModal('productoModal')">Cancelar</button>
-      <button class="btn btn-gold btn-full" onclick="saveProducto()">Guardar ✦</button>
-    </div>
+    <div class="modal-body" id="reservaDetalle"></div>
+    <div class="modal-footer" id="reservaAcciones"></div>
   </div>
 </div>
 
-<!-- MODAL: VER COMPROBANTE -->
-<div class="modal-overlay" id="comprobanteModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div><p class="modal-title">Comprobante de Pago</p></div>
-      <button class="modal-close" onclick="closeModal('comprobanteModal')">✕</button>
-    </div>
-    <div class="modal-body" style="text-align:center;">
-      <img id="comprobanteImg" style="max-width:100%;border-radius:8px;">
-    </div>
-  </div>
-</div>
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-<script src="../js/firebase-config.js"></script>
-<script src="admin.js"></script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCj_wF-627mJPQVXmylJdks9bZESmwwm2A",
+    authDomain: "nails-studio-3687f.firebaseapp.com",
+    projectId: "nails-studio-3687f",
+    storageBucket: "nails-studio-3687f.firebasestorage.app",
+    messagingSenderId: "408592707230",
+    appId: "1:408592707230:web:b08083604f689d76b4958f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  window._fb = { db, auth, provider, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, query, where, orderBy, onSnapshot, signInWithPopup, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider };
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'flex';
+      document.getElementById('sidebarUserName').textContent = user.displayName || user.email.split('@')[0];
+      document.getElementById('sidebarUserRole').textContent = user.email;
+      document.getElementById('profileName').textContent = user.displayName || 'Administrador';
+      document.getElementById('profileEmail').textContent = user.email;
+      if (user.photoURL) document.getElementById('profileAvatar').innerHTML = `<img src="${user.photoURL}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;">`;
+      initAdmin();
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('adminPanel').style.display = 'none';
+    }
+  });
+</script>
+
+<script src="logo.js"></script>
+<script>
+// ── LOGO ──
+window.addEventListener('load', () => {
+  const logo = window.LOGO_B64 || '';
+  ['loginLogo','sidebarLogo'].forEach(id => { const el=document.getElementById(id); if(el&&logo) el.src=logo; });
+});
+
+// ── HELPERS ──
+function showToast(msg, type='info') {
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className=`toast toast-${type}`;
+  t.innerHTML=`<span>${{success:'✓',error:'✕',info:'✦'}[type]}</span> ${msg}`;
+  tc.appendChild(t); setTimeout(()=>t.remove(),4000);
+}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');});
+
+let adminCategories=[], currentBlockDate=null, blockSlotState={};
+
+const SCHEDULE={1:{o:'09:00',c:'20:00'},2:{o:'09:00',c:'20:00'},3:{o:'09:00',c:'20:00'},4:{o:'09:00',c:'20:00'},5:{o:'09:00',c:'20:00'},6:{o:'08:00',c:'12:00'},0:null};
+const MONTHS_ES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const DAYS_ES=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+
+// ── AUTH ──
+async function loginWithGoogle() {
+  try {
+    const {auth,provider,signInWithPopup}=window._fb;
+    await signInWithPopup(auth,provider);
+  } catch(e) { showLoginError(e.message); }
+}
+
+async function loginWithEmail() {
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  if(!email||!pass){showLoginError('Completa todos los campos');return;}
+  try {
+    const {auth,signInWithEmailAndPassword}=window._fb;
+    await signInWithEmailAndPassword(auth,email,pass);
+  } catch(e) { showLoginError('Usuario o contraseña incorrectos'); }
+}
+
+function showLoginError(msg) {
+  const el=document.getElementById('loginError');
+  el.textContent=msg; el.style.display='block';
+  setTimeout(()=>el.style.display='none',4000);
+}
+
+async function doLogout() {
+  const {auth,signOut}=window._fb;
+  await signOut(auth);
+}
+
+async function changePassword() {
+  const np=document.getElementById('newPass').value;
+  const cp=document.getElementById('confirmPass').value;
+  if(!np||!cp){showToast('Completa ambos campos','error');return;}
+  if(np!==cp){showToast('Las contraseñas no coinciden','error');return;}
+  if(np.length<6){showToast('Mínimo 6 caracteres','error');return;}
+  try {
+    const {auth,updatePassword}=window._fb;
+    await updatePassword(auth.currentUser,np);
+    showToast('Contraseña actualizada ✓','success');
+    document.getElementById('newPass').value='';
+    document.getElementById('confirmPass').value='';
+  } catch(e) {
+    if(e.code==='auth/requires-recent-login') showToast('Cierra sesión, vuelve a iniciar y luego cambia la contraseña','error');
+    else showToast('Error: '+e.message,'error');
+  }
+}
+
+// ── INIT ──
+function initAdmin() { loadDashboard(); loadAdminCategories(); }
+
+// ── NAVEGACIÓN ──
+function showPage(page) {
+  document.querySelectorAll('.admin-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(`page-${page}`).classList.add('active');
+  document.getElementById(`nav-${page}`)?.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+  const loaders={dashboard:loadDashboard,reservas:loadReservas,servicios:loadAdminServicios,categorias:loadAdminCategorias,horarios:loadHorarios};
+  loaders[page]?.();
+}
+
+// ── FB HELPERS ──
+async function fbGetAll(col) {
+  const {db,collection,getDocs}=window._fb;
+  const snap=await getDocs(collection(db,col));
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+}
+async function fbQuery(col,...args) {
+  const {db,collection,getDocs,query}=window._fb;
+  const snap=await getDocs(query(collection(db,col),...args));
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+}
+
+// ── DASHBOARD ──
+async function loadDashboard() {
+  try {
+    const all=await fbGetAll('reservas');
+    const hoy=new Date().toISOString().split('T')[0];
+    document.getElementById('stTotal').textContent=all.length;
+    document.getElementById('stPendientes').textContent=all.filter(r=>r.estado==='pendiente').length;
+    document.getElementById('stHoy').textContent=all.filter(r=>r.fecha===hoy).length;
+    const ing=all.filter(r=>r.estado!=='cancelada').reduce((a,b)=>a+(b.totalPrecio||0),0);
+    document.getElementById('stIngresos').textContent=`$${ing.toLocaleString('es-CO')}`;
+    const proximas=all.filter(r=>r.fecha>=hoy&&r.estado!=='cancelada').sort((a,b)=>(a.fecha+a.hora).localeCompare(b.fecha+b.hora)).slice(0,8);
+    document.getElementById('proximasList').innerHTML=proximas.length
+      ?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Fecha</th><th>Hora</th><th>Cliente</th><th>Servicio(s)</th><th>Estado</th><th>Acción</th></tr></thead><tbody>${proximas.map(r=>`<tr><td>${fmtDateDisplay(r.fecha)}</td><td style="color:var(--dorado);font-weight:600;">${r.hora}</td><td>${r.nombre}<br><a href="https://wa.me/${r.telefono?.replace(/\D/g,'')}" target="_blank" style="color:var(--success);font-size:0.74rem;text-decoration:none;">📱 ${r.telefono}</a></td><td style="font-size:0.78rem;">${(r.servicios||[]).map(s=>s.nombre).join(', ')}</td><td><span class="badge badge-${r.estado}">${r.estado}</span></td><td><button class="btn btn-outline btn-sm" onclick="verReserva('${r.id}')">Ver</button></td></tr>`).join('')}</tbody></table></div>`
+      :`<p style="color:var(--texto-muted);font-size:0.84rem;">No hay citas próximas.</p>`;
+  } catch(e){console.error(e);}
+}
+
+// ── RESERVAS ──
+async function loadReservas() {
+  const tbody=document.getElementById('reservasTbody');
+  tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--texto-muted);padding:20px;">Cargando...</td></tr>`;
+  try {
+    let all=await fbGetAll('reservas');
+    all.sort((a,b)=>(b.fecha+b.hora).localeCompare(a.fecha+a.hora));
+    const estado=document.getElementById('filterEstado').value;
+    const fecha=document.getElementById('filterFecha').value;
+    if(estado) all=all.filter(r=>r.estado===estado);
+    if(fecha) all=all.filter(r=>r.fecha===fecha);
+    if(!all.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--texto-muted);padding:20px;">No hay reservas.</td></tr>`;return;}
+    tbody.innerHTML=all.map(r=>`<tr>
+      <td>${fmtDateDisplay(r.fecha)}<br><span style="color:var(--dorado);font-weight:600;">${r.hora}</span></td>
+      <td><strong>${r.nombre}</strong><br><a href="https://wa.me/${r.telefono?.replace(/\D/g,'')}" target="_blank" style="color:var(--success);font-size:0.76rem;text-decoration:none;">📱 ${r.telefono}</a></td>
+      <td style="font-size:0.78rem;max-width:160px;">${(r.servicios||[]).map(s=>`<span style="display:block;">💅 ${s.nombre}</span>`).join('')}${r.notas?`<em style="color:var(--texto-muted);font-size:0.72rem;">"${r.notas}"</em>`:''}</td>
+      <td style="color:var(--dorado);font-weight:600;">$${(r.totalPrecio||0).toLocaleString('es-CO')}</td>
+      <td><span class="badge badge-${r.estado}">${r.estado}</span></td>
+      <td><div style="display:flex;gap:5px;flex-wrap:wrap;">
+        <button class="btn btn-sm btn-outline" onclick="verReserva('${r.id}')">Ver</button>
+        ${r.estado==='pendiente'?`<button class="btn btn-sm btn-success" onclick="cambiarEstado('${r.id}','confirmada')">✓</button>`:''}
+        ${r.estado!=='cancelada'?`<button class="btn btn-sm btn-danger" onclick="cancelarReserva('${r.id}','${r.nombre}','${r.telefono}','${r.fecha}','${r.hora}')">✕</button>`:''}
+        <button class="btn btn-sm" style="background:rgba(123,174,127,0.1);color:var(--success);border:1px solid rgba(123,174,127,0.3);" onclick="notificarCliente('${r.telefono}','${r.nombre}','${r.fecha}','${r.hora}')">📱</button>
+      </div></td>
+    </tr>`).join('');
+  } catch(e){console.error(e);}
+}
+
+async function verReserva(id) {
+  try {
+    const {db,doc,getDoc}=window._fb;
+    const snap=await getDoc(doc(db,'reservas',id));
+    if(!snap.exists()) return;
+    const r={id:snap.id,...snap.data()};
+    document.getElementById('reservaDetalle').innerHTML=`
+      <div style="background:var(--negro-soft);border:1px solid var(--borde);border-radius:8px;padding:16px;margin-bottom:14px;">
+        <p style="font-size:0.68rem;letter-spacing:2px;color:var(--madera);text-transform:uppercase;">Fecha y Hora</p>
+        <p style="font-size:1rem;color:var(--dorado);font-weight:600;margin-bottom:10px;">${fmtDateDisplay(r.fecha)} — ${r.hora}</p>
+        <p style="font-size:0.68rem;letter-spacing:2px;color:var(--madera);text-transform:uppercase;">Cliente</p>
+        <p style="margin-bottom:4px;">${r.nombre}</p>
+        <a href="https://wa.me/${r.telefono?.replace(/\D/g,'')}" target="_blank" style="color:var(--success);font-size:0.82rem;">📱 ${r.telefono}</a>
+        ${r.notas?`<p style="margin-top:8px;font-size:0.8rem;color:var(--texto-muted);font-style:italic;">"${r.notas}"</p>`:''}
+      </div>
+      <p style="font-size:0.68rem;letter-spacing:2px;color:var(--madera);text-transform:uppercase;margin-bottom:8px;">Servicios</p>
+      ${(r.servicios||[]).map(s=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--borde);font-size:0.84rem;"><span>💅 ${s.nombre}</span><span style="color:var(--dorado);">$${(s.precio||0).toLocaleString('es-CO')}</span></div>`).join('')}
+      <div style="display:flex;justify-content:space-between;padding-top:12px;font-family:'Cormorant Garamond',serif;font-size:1.2rem;">
+        <span style="color:var(--texto-muted);">Total</span>
+        <span style="color:var(--dorado);font-weight:700;">$${(r.totalPrecio||0).toLocaleString('es-CO')} COP</span>
+      </div>
+      <p style="margin-top:12px;"><span class="badge badge-${r.estado}">${r.estado}</span></p>`;
+    document.getElementById('reservaAcciones').innerHTML=`
+      ${r.estado==='pendiente'?`<button class="btn btn-success btn-full" onclick="cambiarEstado('${r.id}','confirmada');closeModal('reservaModal')">✓ Confirmar Cita</button>`:''}
+      ${r.estado!=='cancelada'?`<button class="btn btn-danger btn-full" onclick="cancelarReserva('${r.id}','${r.nombre}','${r.telefono}','${r.fecha}','${r.hora}');closeModal('reservaModal')">✕ Cancelar Cita</button>`:''}
+      <button class="btn btn-outline btn-full" onclick="notificarCliente('${r.telefono}','${r.nombre}','${r.fecha}','${r.hora}')">📱 Recordatorio WhatsApp</button>`;
+    openModal('reservaModal');
+  } catch(e){showToast('Error al cargar reserva','error');}
+}
+
+async function cambiarEstado(id, estado) {
+  try {
+    const {db,doc,updateDoc}=window._fb;
+    await updateDoc(doc(db,'reservas',id),{estado});
+    showToast(`Cita ${estado} ✓`,'success');
+    loadReservas(); loadDashboard();
+  } catch{showToast('Error','error');}
+}
+
+async function cancelarReserva(id, nombre, telefono, fecha, hora) {
+  if(!confirm(`¿Cancelar la cita de ${nombre} el ${fecha} a las ${hora}?`)) return;
+  try {
+    const {db,doc,updateDoc}=window._fb;
+    await updateDoc(doc(db,'reservas',id),{estado:'cancelada'});
+    const msg=`Hola ${nombre}, lamentamos informarte que tu cita en TS Nails Studio del ${fecha} a las ${hora} ha sido cancelada. Por favor contáctanos para reagendar. 💅`;
+    window.open(`https://wa.me/${telefono?.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+    showToast('Reserva cancelada','info');
+    loadReservas(); loadDashboard();
+  } catch{showToast('Error','error');}
+}
+
+function notificarCliente(telefono, nombre, fecha, hora) {
+  const msg=`Hola ${nombre} 💅 Te recordamos tu cita en TS Nails Studio el ${fmtDateDisplay(fecha)} a las ${hora}.\n📍 Diagonal 67 #3-57, Barrio Los Muiscas, Tunja.\n¡Te esperamos!`;
+  window.open(`https://wa.me/${telefono?.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+// ── CATEGORÍAS ──
+async function loadAdminCategories() {
+  try {
+    const {orderBy}=window._fb;
+    adminCategories=await fbQuery('categorias',orderBy('orden'));
+  } catch {
+    adminCategories=[{id:'manicura',nombre:'Manicura',orden:1},{id:'pedicura',nombre:'Pedicura',orden:2}];
+  }
+  const sel=document.getElementById('servicioCategoria');
+  if(sel) sel.innerHTML=`<option value="">Selecciona...</option>`+adminCategories.map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');
+}
+
+async function loadAdminCategorias() {
+  await loadAdminCategories();
+  const list=document.getElementById('categoriasList');
+  if(!adminCategories.length){list.innerHTML=`<p style="color:var(--texto-muted);">Sin categorías. Crea una.</p>`;return;}
+  list.innerHTML=adminCategories.map(c=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--borde);">
+    <div><p style="color:var(--texto);font-weight:500;">🏷️ ${c.nombre}</p><p style="color:var(--texto-muted);font-size:0.72rem;">Orden: ${c.orden}</p></div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-outline btn-sm" onclick="openCatModal('${c.id}','${c.nombre}',${c.orden})">Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteCat('${c.id}')">Eliminar</button>
+    </div>
+  </div>`).join('');
+}
+
+function openCatModal(id='',nombre='',orden=1){
+  document.getElementById('catId').value=id;
+  document.getElementById('catNombre').value=nombre;
+  document.getElementById('catOrden').value=orden;
+  document.getElementById('catModalTitle').textContent=id?'Editar Categoría':'Nueva Categoría';
+  openModal('catModal');
+}
+
+async function saveCat(){
+  const id=document.getElementById('catId').value;
+  const nombre=document.getElementById('catNombre').value.trim();
+  const orden=parseInt(document.getElementById('catOrden').value)||1;
+  if(!nombre){showToast('Ingresa el nombre','error');return;}
+  try {
+    const {db,doc,updateDoc,addDoc,collection}=window._fb;
+    if(id) await updateDoc(doc(db,'categorias',id),{nombre,orden});
+    else await addDoc(collection(db,'categorias'),{nombre,orden});
+    showToast('Categoría guardada ✓','success');
+    closeModal('catModal'); loadAdminCategorias();
+  } catch{showToast('Error al guardar','error');}
+}
+
+async function deleteCat(id){
+  if(!confirm('¿Eliminar esta categoría?')) return;
+  const {db,doc,deleteDoc}=window._fb;
+  await deleteDoc(doc(db,'categorias',id));
+  showToast('Categoría eliminada','info');
+  loadAdminCategorias();
+}
+
+// ── SERVICIOS ──
+async function loadAdminServicios(){
+  await loadAdminCategories();
+  const tbody=document.getElementById('serviciosTbody');
+  try {
+    const all=await fbGetAll('servicios');
+    all.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+    tbody.innerHTML=all.map(s=>{
+      const cat=adminCategories.find(c=>c.id===s.categoria)?.nombre||s.categoria||'—';
+      const h=Math.floor((s.duracion||60)/60),m=(s.duracion||60)%60;
+      const dur=h>0?`${h}h${m>0?` ${m}min`:''}` :`${m}min`;
+      return `<tr>
+        <td><strong>${s.nombre}</strong>${s.descripcion?`<br><span style="font-size:0.72rem;color:var(--texto-muted);">${s.descripcion}</span>`:''}</td>
+        <td>${cat}</td>
+        <td style="color:var(--dorado);">$${(s.precio||0).toLocaleString('es-CO')}</td>
+        <td>⏱ ${dur}</td>
+        <td><label class="toggle-switch"><input type="checkbox" ${s.activo!==false?'checked':''} onchange="toggleServicio('${s.id}',this.checked)"><div class="toggle-track"></div></label></td>
+        <td><div style="display:flex;gap:6px;">
+          <button class="btn btn-outline btn-sm" onclick="openServicioModal('${s.id}','${s.nombre.replace(/'/g,'&#39;')}','${s.categoria}',${s.precio},${s.duracion||60},'${(s.descripcion||'').replace(/'/g,'&#39;')}',${s.activo!==false})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteServicio('${s.id}')">✕</button>
+        </div></td>
+      </tr>`;
+    }).join('')||`<tr><td colspan="6" style="text-align:center;color:var(--texto-muted);padding:20px;">Sin servicios. Crea uno.</td></tr>`;
+  } catch(e){console.error(e);}
+}
+
+function openServicioModal(id='',nombre='',categoria='',precio=0,duracion=60,descripcion='',activo=true){
+  document.getElementById('servicioId').value=id;
+  document.getElementById('servicioNombre').value=nombre;
+  document.getElementById('servicioCategoria').value=categoria;
+  document.getElementById('servicioPrecio').value=precio||'';
+  document.getElementById('servicioDuracion').value=duracion||60;
+  document.getElementById('servicioDescripcion').value=descripcion||'';
+  document.getElementById('servicioActivo').checked=activo!==false;
+  document.getElementById('servicioModalTitle').textContent=id?'Editar Servicio':'Nuevo Servicio';
+  openModal('servicioModal');
+}
+
+async function saveServicio(){
+  const id=document.getElementById('servicioId').value;
+  const data={
+    nombre:document.getElementById('servicioNombre').value.trim(),
+    categoria:document.getElementById('servicioCategoria').value,
+    precio:parseFloat(document.getElementById('servicioPrecio').value)||0,
+    duracion:parseInt(document.getElementById('servicioDuracion').value)||60,
+    descripcion:document.getElementById('servicioDescripcion').value.trim(),
+    activo:document.getElementById('servicioActivo').checked
+  };
+  if(!data.nombre){showToast('Ingresa el nombre','error');return;}
+  if(!data.categoria){showToast('Selecciona una categoría','error');return;}
+  try {
+    const {db,doc,updateDoc,addDoc,collection}=window._fb;
+    if(id) await updateDoc(doc(db,'servicios',id),data);
+    else await addDoc(collection(db,'servicios'),data);
+    showToast('Servicio guardado ✓','success');
+    closeModal('servicioModal'); loadAdminServicios();
+  } catch{showToast('Error al guardar','error');}
+}
+
+async function toggleServicio(id, activo){
+  const {db,doc,updateDoc}=window._fb;
+  await updateDoc(doc(db,'servicios',id),{activo});
+  showToast(activo?'Servicio habilitado':'Servicio deshabilitado','info');
+}
+
+async function deleteServicio(id){
+  if(!confirm('¿Eliminar este servicio?')) return;
+  const {db,doc,deleteDoc}=window._fb;
+  await deleteDoc(doc(db,'servicios',id));
+  showToast('Servicio eliminado','info');
+  loadAdminServicios();
+}
+
+// ── HORARIOS ──
+const DAYS_CONFIG=[
+  {key:'lunes',label:'Lunes',dow:1,defOpen:'09:00',defClose:'20:00',defActivo:true},
+  {key:'martes',label:'Martes',dow:2,defOpen:'09:00',defClose:'20:00',defActivo:true},
+  {key:'miercoles',label:'Miércoles',dow:3,defOpen:'09:00',defClose:'20:00',defActivo:true},
+  {key:'jueves',label:'Jueves',dow:4,defOpen:'09:00',defClose:'20:00',defActivo:true},
+  {key:'viernes',label:'Viernes',dow:5,defOpen:'09:00',defClose:'20:00',defActivo:true},
+  {key:'sabado',label:'Sábado',dow:6,defOpen:'08:00',defClose:'12:00',defActivo:true},
+  {key:'domingo',label:'Domingo',dow:0,defOpen:'09:00',defClose:'17:00',defActivo:false},
+];
+
+let horariosData={};
+
+async function loadHorarios(){
+  try {
+    const {db,doc,getDoc}=window._fb;
+    const snap=await getDoc(doc(db,'horarios','config'));
+    horariosData=snap.exists()?snap.data():{};
+  } catch{horariosData={};}
+  const grid=document.getElementById('horariosGrid');
+  grid.innerHTML=DAYS_CONFIG.map(day=>{
+    const d=horariosData[day.key]||{activo:day.defActivo,open:day.defOpen,close:day.defClose};
+    return `<div class="horario-day">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <span class="horario-day-name">${day.label}</span>
+        <label class="toggle-switch"><input type="checkbox" id="h-${day.key}" ${d.activo?'checked':''} onchange="toggleDay('${day.key}')"><div class="toggle-track"></div></label>
+      </div>
+      <div id="ht-${day.key}" style="${d.activo?'':'opacity:0.3;pointer-events:none;'}">
+        <div class="form-group"><label class="form-label" style="font-size:0.62rem;">Apertura</label><input type="time" class="form-input" id="ho-${day.key}" value="${d.open}" style="padding:8px;margin-top:3px;"></div>
+        <div class="form-group"><label class="form-label" style="font-size:0.62rem;">Cierre</label><input type="time" class="form-input" id="hc-${day.key}" value="${d.close}" style="padding:8px;margin-top:3px;"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDay(key){
+  const activo=document.getElementById(`h-${key}`).checked;
+  const times=document.getElementById(`ht-${key}`);
+  times.style.opacity=activo?'1':'0.3';
+  times.style.pointerEvents=activo?'all':'none';
+}
+
+async function saveHorarios(){
+  const data={};
+  DAYS_CONFIG.forEach(day=>{
+    data[day.key]={
+      activo:document.getElementById(`h-${day.key}`).checked,
+      open:document.getElementById(`ho-${day.key}`).value,
+      close:document.getElementById(`hc-${day.key}`).value
+    };
+  });
+  try {
+    const {db,doc,setDoc}=window._fb;
+    await setDoc(doc(db,'horarios','config'),data);
+    showToast('Horarios guardados ✓','success');
+  } catch{showToast('Error al guardar','error');}
+}
+
+// ── BLOQUEAR HORAS ──
+async function loadBlockedDate(){
+  const dateStr=document.getElementById('blockDate').value;
+  if(!dateStr) return;
+  currentBlockDate=dateStr; blockSlotState={};
+  const date=new Date(dateStr+'T00:00:00');
+  const dow=date.getDay();
+  const sched=SCHEDULE[dow];
+  const wrap=document.getElementById('blockSlotsWrap');
+  if(!sched){wrap.innerHTML=`<p style="color:var(--texto-muted);">Día cerrado.</p>`;wrap.style.display='block';return;}
+  let existing=[];
+  try {
+    const {db,doc,getDoc}=window._fb;
+    const snap=await getDoc(doc(db,'bloqueados',dateStr));
+    if(snap.exists()) existing=snap.data().slots||[];
+  } catch{}
+  const slots=[];
+  let cur=t2m(sched.o), end=t2m(sched.c);
+  while(cur<end){slots.push(m2t(cur));cur+=30;}
+  slots.forEach(s=>{blockSlotState[s]=existing.includes(s);});
+  document.getElementById('blockSlots').innerHTML=slots.map(s=>`<div class="hora-block ${blockSlotState[s]?'blocked':''}" id="bs-${s.replace(':','-')}" onclick="toggleBlock('${s}')">${s}</div>`).join('');
+  wrap.style.display='block';
+}
+
+function toggleBlock(t){
+  blockSlotState[t]=!blockSlotState[t];
+  document.getElementById(`bs-${t.replace(':','-')}`).classList.toggle('blocked',blockSlotState[t]);
+}
+
+async function saveBlockedSlots(){
+  if(!currentBlockDate) return;
+  const blocked=Object.keys(blockSlotState).filter(s=>blockSlotState[s]);
+  try {
+    const {db,doc,setDoc}=window._fb;
+    await setDoc(doc(db,'bloqueados',currentBlockDate),{slots:blocked,fecha:currentBlockDate});
+    showToast(`${blocked.length} hora(s) bloqueada(s) ✓`,'success');
+  } catch{showToast('Error','error');}
+}
+
+// ── HELPERS ──
+function t2m(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
+function m2t(m){return `${Math.floor(m/60).toString().padStart(2,'0')}:${(m%60).toString().padStart(2,'0')}`;}
+function fmtDateDisplay(dateStr){
+  if(!dateStr) return '';
+  const [y,m,d]=dateStr.split('-');
+  const date=new Date(y,m-1,d);
+  return `${DAYS_ES[date.getDay()]}, ${d} de ${MONTHS_ES[m-1]} de ${y}`;
+}
+
+// Exponer todo
+Object.assign(window,{loginWithGoogle,loginWithEmail,doLogout,changePassword,showPage,loadReservas,verReserva,cambiarEstado,cancelarReserva,notificarCliente,openServicioModal,saveServicio,toggleServicio,deleteServicio,loadAdminCategorias,openCatModal,saveCat,deleteCat,saveHorarios,toggleDay,loadBlockedDate,toggleBlock,saveBlockedSlots,closeModal,openModal});
+</script>
 </body>
 </html>

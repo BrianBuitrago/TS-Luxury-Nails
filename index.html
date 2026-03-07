@@ -3,177 +3,372 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nails Studio — Reservas | Tunja, Boyacá</title>
-  <meta name="description" content="Reserva tu cita de manicure y pedicure en Nails Studio, Tunja Boyacá. Diagonal 67 #3-57 Barrio Los Muiscas.">
-  <link rel="stylesheet" href="css/styles.css">
+  <title>TS Nails Studio — Reservas | Tunja, Boyacá</title>
+  <meta name="description" content="Reserva tu cita de manicure y pedicure en TS Nails Studio, Tunja Boyacá. Diagonal 67 #3-57 Barrio Los Muiscas.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --negro: #0D0B09;
+      --negro-soft: #1A1713;
+      --negro-card: #201D19;
+      --dorado: #C9A84C;
+      --dorado-light: #E8C97A;
+      --dorado-dark: #9B7A2F;
+      --dorado-glow: rgba(201,168,76,0.12);
+      --madera: #C4956A;
+      --madera-light: #DEB896;
+      --texto: #F0E8D8;
+      --texto-muted: #8A7A68;
+      --borde: rgba(201,168,76,0.18);
+      --borde-hover: rgba(201,168,76,0.45);
+      --success: #7BAE7F;
+      --error: #C97B7B;
+      --warning: #E8A44A;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Jost',sans-serif; background:var(--negro); color:var(--texto); min-height:100vh; }
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:var(--negro); }
+    ::-webkit-scrollbar-thumb { background:var(--dorado-dark); border-radius:3px; }
+
+    /* HEADER */
+    .site-header { position:fixed; top:0; left:0; right:0; z-index:100; padding:0 24px; background:rgba(13,11,9,0.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--borde); transition:background 0.3s; }
+    .header-inner { max-width:1140px; margin:0 auto; height:68px; display:flex; align-items:center; justify-content:space-between; }
+    .logo-wrap { display:flex; align-items:center; gap:10px; }
+    .logo-img { width:44px; height:44px; object-fit:contain; }
+    .logo-text { display:flex; flex-direction:column; line-height:1; }
+    .logo-main { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:700; color:var(--dorado); letter-spacing:3px; text-transform:uppercase; }
+    .logo-sub { font-size:0.6rem; letter-spacing:4px; color:var(--madera); text-transform:uppercase; margin-top:1px; }
+    .nav-links { display:flex; gap:4px; list-style:none; }
+    .nav-links a { text-decoration:none; color:var(--texto-muted); font-size:0.8rem; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; padding:8px 12px; border-radius:4px; transition:all 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--dorado); background:var(--dorado-glow); }
+    .btn-reservar-nav { background:var(--dorado)!important; color:var(--negro)!important; font-weight:600!important; border-radius:4px; }
+    .btn-reservar-nav:hover { background:var(--dorado-light)!important; }
+    .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; }
+    .hamburger span { width:22px; height:2px; background:var(--dorado); border-radius:2px; transition:all 0.3s; }
+
+    /* HERO */
+    .hero { min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; padding:100px 24px 60px; }
+    .hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 65% 40%, rgba(196,149,106,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 35% at 20% 75%, rgba(201,168,76,0.05) 0%, transparent 50%), var(--negro); }
+    .hero-ring { position:absolute; border:1px solid rgba(201,168,76,0.05); border-radius:50%; animation:slowSpin 50s linear infinite; }
+    .hero-ring-1 { width:600px; height:600px; top:50%; left:50%; transform:translate(-50%,-50%); }
+    .hero-ring-2 { width:420px; height:420px; top:50%; left:50%; transform:translate(-50%,-50%); animation-direction:reverse; animation-duration:35s; }
+    @keyframes slowSpin { from{transform:translate(-50%,-50%) rotate(0deg);} to{transform:translate(-50%,-50%) rotate(360deg);} }
+    .hero-content { position:relative; text-align:center; max-width:680px; }
+    .hero-logo { width:140px; height:140px; object-fit:contain; margin-bottom:24px; opacity:0; animation:fadeUp 0.8s ease 0.2s forwards; filter:drop-shadow(0 0 20px rgba(201,168,76,0.3)); }
+    .hero-eyebrow { font-size:0.7rem; letter-spacing:6px; text-transform:uppercase; color:var(--madera); margin-bottom:16px; opacity:0; animation:fadeUp 0.8s ease 0.4s forwards; }
+    .hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.8rem,7vw,5.5rem); line-height:1.0; color:var(--texto); margin-bottom:8px; opacity:0; animation:fadeUp 0.8s ease 0.5s forwards; }
+    .hero h1 em { color:var(--dorado); font-style:italic; }
+    .hero-tagline { font-family:'Cormorant Garamond',serif; font-size:clamp(0.95rem,2vw,1.2rem); color:var(--texto-muted); font-style:italic; margin-bottom:36px; opacity:0; animation:fadeUp 0.8s ease 0.7s forwards; }
+    .hero-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; opacity:0; animation:fadeUp 0.8s ease 0.9s forwards; }
+    .hero-address { margin-top:40px; font-size:0.78rem; color:var(--texto-muted); letter-spacing:1px; opacity:0; animation:fadeUp 0.8s ease 1.1s forwards; }
+    .hero-address span { color:var(--madera); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px);} to{opacity:1;transform:translateY(0);} }
+
+    /* BOTONES */
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 30px; border-radius:3px; font-family:'Jost',sans-serif; font-size:0.8rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; cursor:pointer; border:none; text-decoration:none; transition:all 0.3s; }
+    .btn-gold { background:var(--dorado); color:var(--negro); }
+    .btn-gold:hover { background:var(--dorado-light); transform:translateY(-2px); box-shadow:0 8px 24px rgba(201,168,76,0.28); }
+    .btn-outline { background:transparent; color:var(--dorado); border:1px solid var(--borde-hover); }
+    .btn-outline:hover { background:var(--dorado-glow); }
+    .btn-sm { padding:8px 16px; font-size:0.72rem; }
+    .btn-full { width:100%; justify-content:center; }
+    .btn-danger { background:var(--error); color:white; }
+
+    /* INFO STRIP */
+    .info-strip { background:var(--negro-soft); border-top:1px solid var(--borde); border-bottom:1px solid var(--borde); }
+    .info-strip-inner { max-width:1140px; margin:0 auto; padding:24px; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; }
+    .info-item { display:flex; align-items:flex-start; gap:12px; }
+    .info-icon { font-size:1.3rem; margin-top:1px; flex-shrink:0; }
+    .info-text-title { font-size:0.8rem; font-weight:600; color:var(--dorado); margin-bottom:2px; letter-spacing:0.5px; }
+    .info-text-sub { font-size:0.76rem; color:var(--texto-muted); line-height:1.6; }
+
+    /* SECCIONES */
+    .section { max-width:1140px; margin:0 auto; padding:72px 24px; }
+    .section-eyebrow { font-size:0.68rem; letter-spacing:5px; text-transform:uppercase; color:var(--madera); margin-bottom:10px; }
+    .section-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.7rem,3.5vw,2.6rem); color:var(--texto); line-height:1.15; }
+    .section-title em { color:var(--dorado); font-style:italic; }
+    .section-line { width:50px; height:1px; background:linear-gradient(90deg,var(--dorado),transparent); margin-top:14px; margin-bottom:36px; }
+
+    /* CATEGORÍAS TABS */
+    .category-tabs { display:flex; gap:8px; margin-bottom:28px; flex-wrap:wrap; }
+    .cat-tab { padding:8px 18px; border:1px solid var(--borde); background:transparent; color:var(--texto-muted); border-radius:2px; font-family:'Jost',sans-serif; font-size:0.76rem; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+    .cat-tab:hover, .cat-tab.active { border-color:var(--dorado); color:var(--dorado); background:var(--dorado-glow); }
+
+    /* SERVICIOS GRID */
+    .services-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(265px,1fr)); gap:14px; }
+    .service-card { background:var(--negro-card); border:1px solid var(--borde); border-radius:6px; padding:22px; transition:all 0.3s; position:relative; overflow:hidden; }
+    .service-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--dorado),var(--madera)); opacity:0; transition:opacity 0.3s; }
+    .service-card:hover { border-color:var(--borde-hover); transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,0,0,0.35); }
+    .service-card:hover::after { opacity:1; }
+    .service-cat-badge { font-size:0.62rem; letter-spacing:2px; text-transform:uppercase; color:var(--madera); margin-bottom:8px; }
+    .service-name { font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--texto); margin-bottom:4px; }
+    .service-duration { font-size:0.76rem; color:var(--texto-muted); margin-bottom:14px; }
+    .service-price { font-size:1.35rem; font-weight:600; color:var(--dorado); font-family:'Cormorant Garamond',serif; }
+    .service-price small { font-size:0.72rem; color:var(--texto-muted); font-family:'Jost',sans-serif; font-weight:400; }
+    .btn-add-service { margin-top:12px; width:100%; padding:10px; background:transparent; border:1px solid var(--borde); color:var(--texto-muted); border-radius:3px; font-family:'Jost',sans-serif; font-size:0.76rem; font-weight:500; letter-spacing:1px; cursor:pointer; transition:all 0.2s; }
+    .btn-add-service:hover { border-color:var(--dorado); color:var(--dorado); background:var(--dorado-glow); }
+    .btn-add-service.added { border-color:var(--success); color:var(--success); background:rgba(123,174,127,0.08); }
+
+    /* CARRITO FAB */
+    .cart-fab { position:fixed; bottom:26px; right:26px; z-index:150; background:var(--dorado); color:var(--negro); width:56px; height:56px; border-radius:50%; border:none; font-size:1.3rem; cursor:pointer; box-shadow:0 6px 20px rgba(201,168,76,0.4); transition:all 0.3s; display:none; align-items:center; justify-content:center; }
+    .cart-fab:hover { transform:scale(1.08); background:var(--dorado-light); }
+    .cart-badge { position:absolute; top:-4px; right:-4px; background:var(--madera); color:white; width:20px; height:20px; border-radius:50%; font-size:0.68rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+    /* HORARIOS */
+    .schedule-grid-pub { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; max-width:700px; }
+    .schedule-day { background:var(--negro-card); border:1px solid var(--borde); border-radius:6px; padding:14px; text-align:center; }
+    .schedule-day.closed { opacity:0.35; }
+    .schedule-day-name { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--madera); margin-bottom:6px; }
+
+    /* DISPONIBILIDAD PÚBLICA */
+    .availability-section { background:var(--negro-soft); border-top:1px solid var(--borde); border-bottom:1px solid var(--borde); }
+    .avail-cal-wrap { background:var(--negro-card); border:1px solid var(--borde); border-radius:8px; overflow:hidden; max-width:420px; }
+    .cal-header { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--borde); background:var(--negro-soft); }
+    .cal-nav { background:transparent; border:1px solid var(--borde); color:var(--dorado); width:28px; height:28px; border-radius:3px; cursor:pointer; font-size:0.9rem; transition:all 0.2s; display:flex; align-items:center; justify-content:center; }
+    .cal-nav:hover { border-color:var(--dorado); background:var(--dorado-glow); }
+    .cal-month-label { font-family:'Cormorant Garamond',serif; font-size:1rem; color:var(--texto); }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); padding:8px; gap:3px; }
+    .cal-day-name { text-align:center; padding:6px 2px; font-size:0.66rem; font-weight:500; letter-spacing:1px; color:var(--texto-muted); text-transform:uppercase; }
+    .cal-day { text-align:center; padding:8px 2px; font-size:0.85rem; cursor:pointer; border-radius:3px; transition:all 0.15s; color:var(--texto); }
+    .cal-day.empty, .cal-day.past { color:rgba(255,255,255,0.08); cursor:default; pointer-events:none; }
+    .cal-day.sunday { color:rgba(255,255,255,0.12); cursor:not-allowed; }
+    .cal-day.today { color:var(--dorado); font-weight:700; }
+    .cal-day.selected { background:var(--dorado); color:var(--negro); font-weight:700; }
+    .cal-day:not(.empty):not(.past):not(.sunday):hover { background:var(--dorado-glow); color:var(--dorado); }
+    .slots-wrap { margin-top:20px; }
+    .slots-title { font-size:0.7rem; letter-spacing:2px; text-transform:uppercase; color:var(--madera); margin-bottom:10px; }
+    .time-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+    .time-slot { padding:9px 4px; text-align:center; border:1px solid var(--borde); border-radius:3px; font-size:0.8rem; cursor:pointer; transition:all 0.2s; background:var(--negro-card); color:var(--texto); }
+    .time-slot:hover { border-color:var(--dorado); color:var(--dorado); }
+    .time-slot.selected { background:var(--dorado); border-color:var(--dorado); color:var(--negro); font-weight:600; }
+    .time-slot.blocked { background:rgba(201,123,123,0.08); color:rgba(255,255,255,0.2); cursor:not-allowed; border-color:rgba(201,123,123,0.2); }
+    .time-slot.blocked::after { content:''; }
+    .slot-legend { display:flex; gap:16px; margin-top:12px; flex-wrap:wrap; }
+    .legend-item { display:flex; align-items:center; gap:6px; font-size:0.72rem; color:var(--texto-muted); }
+    .legend-dot { width:10px; height:10px; border-radius:50%; }
+    .legend-free { background:var(--negro-card); border:1px solid var(--borde); }
+    .legend-blocked { background:rgba(201,123,123,0.3); }
+    .legend-selected { background:var(--dorado); }
+
+    /* MODAL */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.78); backdrop-filter:blur(6px); z-index:300; align-items:center; justify-content:center; padding:16px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--negro-card); border:1px solid var(--borde); border-radius:10px; width:100%; max-width:540px; max-height:90vh; overflow-y:auto; animation:slideUp 0.3s ease; }
+    .modal-lg { max-width:600px; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);} }
+    .modal-header { padding:22px 26px 18px; border-bottom:1px solid var(--borde); display:flex; align-items:flex-start; justify-content:space-between; }
+    .modal-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--dorado); }
+    .modal-subtitle { font-size:0.8rem; color:var(--texto-muted); margin-top:2px; }
+    .modal-close { background:transparent; border:1px solid var(--borde); color:var(--texto-muted); width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:0.95rem; transition:all 0.2s; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .modal-close:hover { border-color:var(--error); color:var(--error); }
+    .modal-body { padding:22px 26px; }
+    .modal-footer { padding:14px 26px 22px; display:flex; gap:10px; }
+
+    /* STEPS */
+    .steps-bar { display:flex; align-items:center; margin-bottom:24px; }
+    .step-num { width:26px; height:26px; border-radius:50%; background:var(--negro-soft); border:1px solid var(--borde); color:var(--texto-muted); font-size:0.72rem; font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.3s; }
+    .step-num.active { background:var(--dorado); border-color:var(--dorado); color:var(--negro); }
+    .step-num.done { background:var(--success); border-color:var(--success); color:white; }
+    .step-connector { flex:1; height:1px; background:var(--borde); margin:0 5px; }
+    .step-connector.done { background:var(--success); }
+
+    /* FORM */
+    .form-group { margin-bottom:16px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-label { display:block; font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--madera); margin-bottom:5px; font-weight:500; }
+    .form-input, .form-textarea { width:100%; padding:11px 14px; background:var(--negro-soft); border:1px solid var(--borde); border-radius:4px; color:var(--texto); font-family:'Jost',sans-serif; font-size:0.9rem; outline:none; transition:border-color 0.2s; }
+    .form-input:focus, .form-textarea:focus { border-color:var(--dorado); box-shadow:0 0 0 2px rgba(201,168,76,0.07); }
+    .form-textarea { resize:vertical; min-height:75px; }
+
+    /* SUMMARY CARD */
+    .summary-card { background:var(--negro-soft); border:1px solid var(--borde); border-radius:8px; padding:18px; margin-bottom:16px; }
+    .summary-card .s-label { font-size:0.68rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--madera); margin-bottom:3px; }
+    .summary-card .s-value { font-size:0.9rem; color:var(--texto); margin-bottom:10px; }
+
+    /* FILE UPLOAD */
+    .file-upload-area { border:1px dashed var(--borde); border-radius:6px; padding:18px; text-align:center; cursor:pointer; transition:all 0.2s; }
+    .file-upload-area:hover { border-color:var(--dorado); background:var(--dorado-glow); }
+    .file-upload-area input { display:none; }
+    .file-upload-icon { font-size:1.8rem; margin-bottom:6px; color:var(--texto-muted); }
+    .file-upload-text { font-size:0.8rem; color:var(--texto-muted); }
+
+    /* CART */
+    .cart-item { display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--borde); font-size:0.86rem; }
+    .cart-item-name { color:var(--texto); flex:1; }
+    .cart-item-price { color:var(--dorado); font-weight:600; margin:0 10px; }
+    .cart-item-remove { background:none; border:none; color:var(--texto-muted); cursor:pointer; font-size:0.9rem; transition:color 0.2s; }
+    .cart-item-remove:hover { color:var(--error); }
+    .cart-total { display:flex; justify-content:space-between; padding-top:12px; font-family:'Cormorant Garamond',serif; font-size:1.25rem; }
+    .cart-total-label { color:var(--texto-muted); }
+    .cart-total-value { color:var(--dorado); font-weight:700; }
+
+    /* TOAST */
+    .toast-container { position:fixed; top:80px; right:18px; z-index:500; display:flex; flex-direction:column; gap:7px; }
+    .toast { padding:11px 18px; border-radius:5px; font-size:0.83rem; font-weight:500; min-width:240px; animation:toastIn 0.3s ease; display:flex; align-items:center; gap:7px; }
+    .toast-success { background:rgba(123,174,127,0.12); border:1px solid var(--success); color:var(--success); }
+    .toast-error { background:rgba(201,123,123,0.12); border:1px solid var(--error); color:var(--error); }
+    .toast-info { background:var(--dorado-glow); border:1px solid var(--borde-hover); color:var(--dorado); }
+    @keyframes toastIn { from{opacity:0;transform:translateX(16px);} to{opacity:1;transform:translateX(0);} }
+
+    /* FOOTER */
+    footer { background:var(--negro-soft); border-top:1px solid var(--borde); padding:40px 24px 24px; text-align:center; }
+    .footer-logo-img { width:70px; height:70px; object-fit:contain; margin-bottom:10px; opacity:0.85; }
+    .footer-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--dorado); letter-spacing:3px; margin-bottom:2px; }
+    .footer-sub { font-size:0.68rem; letter-spacing:4px; color:var(--madera); text-transform:uppercase; margin-bottom:16px; }
+    .footer-address { font-size:0.8rem; color:var(--texto-muted); line-height:1.8; }
+    .footer-copy { font-size:0.68rem; color:rgba(255,255,255,0.12); margin-top:20px; }
+
+    /* RESPONSIVE */
+    @media(max-width:768px) {
+      .nav-links { display:none; position:absolute; top:68px; left:0; right:0; background:var(--negro-card); border-bottom:1px solid var(--borde); padding:10px 0; flex-direction:column; }
+      .nav-links.open { display:flex; }
+      .hamburger { display:flex; }
+      .form-row { grid-template-columns:1fr; }
+      .time-grid { grid-template-columns:repeat(3,1fr); }
+      .modal { border-radius:14px 14px 0 0; position:fixed; bottom:0; left:0; right:0; max-height:88vh; max-width:100%; }
+      .modal-overlay.open { align-items:flex-end; padding:0; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
 
 <!-- HEADER -->
-<header class="site-header">
+<header class="site-header" id="siteHeader">
   <div class="header-inner">
-    <div class="logo">
-      <span class="logo-main">Nails Studio</span>
-      <span class="logo-sub">Tunja · Boyacá</span>
+    <div class="logo-wrap">
+      <img class="logo-img" id="headerLogo" src="" alt="TS Nails Studio">
+      <div class="logo-text">
+        <span class="logo-main">TS Nails</span>
+        <span class="logo-sub">Studio · Tunja</span>
+      </div>
     </div>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#servicios" class="active">Servicios</a></li>
-      <li><a href="#productos">Productos</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#disponibilidad">Disponibilidad</a></li>
       <li><a href="#horarios">Horarios</a></li>
-      <li><a href="#" onclick="openBookingModal()" class="btn-reservar-nav">Reservar</a></li>
+      <li><a href="#" onclick="openBookingModal()" class="btn-reservar-nav">Reservar Cita</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
-  <div class="hero-ornament"></div>
+  <div class="hero-ring hero-ring-1"></div>
+  <div class="hero-ring hero-ring-2"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">✦ Especialistas en uñas ✦</p>
-    <h1>Nails <em>Studio</em></h1>
+    <img class="hero-logo" id="heroLogo" src="" alt="TS Nails Studio">
+    <p class="hero-eyebrow">✦ Especialistas en uñas · Tunja, Boyacá ✦</p>
+    <h1>TS Nails <em>Studio</em></h1>
     <p class="hero-tagline">Arte en cada detalle, elegancia en cada uña</p>
     <div class="hero-actions">
-      <button class="btn btn-gold" onclick="openBookingModal()">✦ Reservar Cita</button>
+      <button class="btn btn-gold" onclick="openBookingModal()">✦ Reservar Mi Cita</button>
       <a href="#servicios" class="btn btn-outline">Ver Servicios</a>
     </div>
-    <p class="hero-address">📍 <span>Diagonal 67 #3-57</span> — Barrio Los Muiscas, Tunja, Boyacá</p>
+    <p class="hero-address">📍 <span>Diagonal 67 #3-57</span> · Barrio Los Muiscas · Tunja, Boyacá</p>
   </div>
 </section>
 
 <!-- INFO STRIP -->
 <div class="info-strip">
   <div class="info-strip-inner">
-    <div class="info-item">
-      <span class="info-icon">🕐</span>
-      <div>
-        <p class="info-text-title">Horarios</p>
-        <p class="info-text-sub">Lun–Vie: 9am – 8pm<br>Sábado: 8am – 12pm<br>Domingos: Cerrado</p>
-      </div>
-    </div>
-    <div class="info-item">
-      <span class="info-icon">📍</span>
-      <div>
-        <p class="info-text-title">Ubicación</p>
-        <p class="info-text-sub">Diagonal 67 #3-57<br>Barrio Los Muiscas<br>Tunja, Boyacá</p>
-      </div>
-    </div>
-    <div class="info-item">
-      <span class="info-icon">💅</span>
-      <div>
-        <p class="info-text-title">Servicios</p>
-        <p class="info-text-sub">Manicure · Pedicure<br>Diseños · Apliques<br>Gel · Dipping · Kapping</p>
-      </div>
-    </div>
-    <div class="info-item">
-      <span class="info-icon">💳</span>
-      <div>
-        <p class="info-text-title">Pagos</p>
-        <p class="info-text-sub">Efectivo · Transferencia<br>Nequi · Daviplata</p>
-      </div>
-    </div>
+    <div class="info-item"><span class="info-icon">🕐</span><div><p class="info-text-title">Horarios</p><p class="info-text-sub">Lun–Vie: 9am–8pm<br>Sábado: 8am–12pm<br>Domingos: Cerrado</p></div></div>
+    <div class="info-item"><span class="info-icon">📍</span><div><p class="info-text-title">Ubicación</p><p class="info-text-sub">Diagonal 67 #3-57<br>Barrio Los Muiscas<br>Tunja, Boyacá</p></div></div>
+    <div class="info-item"><span class="info-icon">💅</span><div><p class="info-text-title">Especialidad</p><p class="info-text-sub">Manicure · Pedicure<br>Diseños · Apliques<br>Gel · Dipping · Kapping</p></div></div>
+    <div class="info-item"><span class="info-icon">💳</span><div><p class="info-text-title">Pagos</p><p class="info-text-sub">Efectivo · Nequi<br>Daviplata · Transferencia</p></div></div>
   </div>
 </div>
 
 <!-- SERVICIOS -->
 <section id="servicios">
   <div class="section">
-    <div class="section-header">
-      <p class="section-eyebrow">✦ Lo que hacemos</p>
-      <h2 class="section-title">Nuestros <em>Servicios</em></h2>
-      <div class="section-line"></div>
-    </div>
+    <p class="section-eyebrow">✦ Nuestros servicios</p>
+    <h2 class="section-title">Catálogo de <em>Servicios</em></h2>
+    <div class="section-line"></div>
     <div class="category-tabs" id="categoryTabs">
-      <button class="cat-tab active" onclick="filterServices('all', this)">Todos</button>
+      <button class="cat-tab active" onclick="filterServices('all',this)">Todos</button>
     </div>
     <div class="services-grid" id="servicesGrid">
-      <div style="color:var(--texto-muted); font-size:0.85rem; padding:20px;">Cargando servicios...</div>
+      <p style="color:var(--texto-muted);font-size:0.85rem;">Cargando servicios...</p>
     </div>
   </div>
 </section>
 
-<!-- PRODUCTOS -->
-<section id="productos" style="background:var(--negro-soft); border-top:1px solid var(--borde); border-bottom:1px solid var(--borde);">
+<!-- DISPONIBILIDAD PÚBLICA -->
+<section id="disponibilidad" class="availability-section">
   <div class="section">
-    <div class="section-header">
-      <p class="section-eyebrow">✦ Tienda</p>
-      <h2 class="section-title">Productos <em>Disponibles</em></h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="products-grid" id="productsGrid">
-      <div style="color:var(--texto-muted); font-size:0.85rem; padding:20px;">Cargando productos...</div>
+    <p class="section-eyebrow">✦ Consulta en tiempo real</p>
+    <h2 class="section-title">Disponibilidad de <em>Citas</em></h2>
+    <div class="section-line"></div>
+    <p style="font-size:0.83rem;color:var(--texto-muted);margin-bottom:24px;">Selecciona una fecha para ver los horarios disponibles. Las horas marcadas en rojo ya están reservadas.</p>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;flex-wrap:wrap;">
+      <div class="avail-cal-wrap">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="changeMonthPublic(-1)">‹</button>
+          <span class="cal-month-label" id="pubCalLabel"></span>
+          <button class="cal-nav" onclick="changeMonthPublic(1)">›</button>
+        </div>
+        <div class="cal-grid" id="pubCalGrid"></div>
+      </div>
+      <div>
+        <div class="slots-wrap" id="pubSlotsWrap" style="display:none;">
+          <p class="slots-title" id="pubSlotsTitle">Horarios del día</p>
+          <div class="time-grid" id="pubTimeGrid"></div>
+          <div class="slot-legend">
+            <div class="legend-item"><div class="legend-dot legend-free"></div>Disponible</div>
+            <div class="legend-item"><div class="legend-dot legend-blocked"></div>Reservado</div>
+          </div>
+          <button class="btn btn-gold" style="margin-top:18px;" onclick="openBookingModal()">✦ Reservar esta hora</button>
+        </div>
+        <div id="pubSlotsEmpty" style="color:var(--texto-muted);font-size:0.85rem;padding-top:20px;">← Selecciona una fecha en el calendario</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- HORARIOS INFO -->
+<!-- HORARIOS -->
 <section id="horarios">
   <div class="section">
-    <div class="section-header">
-      <p class="section-eyebrow">✦ Atención</p>
-      <h2 class="section-title">Nuestros <em>Horarios</em></h2>
-      <div class="section-line"></div>
-    </div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; max-width:700px;">
-      <div class="schedule-day" id="sched-lunes">
-        <p class="schedule-day-name">Lunes</p>
-        <p style="font-size:0.82rem;color:var(--texto);">9:00 – 20:00</p>
-      </div>
-      <div class="schedule-day" id="sched-martes">
-        <p class="schedule-day-name">Martes</p>
-        <p style="font-size:0.82rem;color:var(--texto);">9:00 – 20:00</p>
-      </div>
-      <div class="schedule-day" id="sched-miercoles">
-        <p class="schedule-day-name">Miércoles</p>
-        <p style="font-size:0.82rem;color:var(--texto);">9:00 – 20:00</p>
-      </div>
-      <div class="schedule-day" id="sched-jueves">
-        <p class="schedule-day-name">Jueves</p>
-        <p style="font-size:0.82rem;color:var(--texto);">9:00 – 20:00</p>
-      </div>
-      <div class="schedule-day" id="sched-viernes">
-        <p class="schedule-day-name">Viernes</p>
-        <p style="font-size:0.82rem;color:var(--texto);">9:00 – 20:00</p>
-      </div>
-      <div class="schedule-day" id="sched-sabado">
-        <p class="schedule-day-name">Sábado</p>
-        <p style="font-size:0.82rem;color:var(--texto);">8:00 – 12:00</p>
-      </div>
-      <div class="schedule-day closed">
-        <p class="schedule-day-name">Domingo</p>
-        <p style="font-size:0.82rem;color:var(--texto-muted);">Cerrado</p>
-      </div>
+    <p class="section-eyebrow">✦ Atención</p>
+    <h2 class="section-title">Horarios de <em>Atención</em></h2>
+    <div class="section-line"></div>
+    <div class="schedule-grid-pub">
+      <div class="schedule-day"><p class="schedule-day-name">Lunes</p><p style="font-size:0.8rem;color:var(--texto);">9:00 – 20:00</p></div>
+      <div class="schedule-day"><p class="schedule-day-name">Martes</p><p style="font-size:0.8rem;color:var(--texto);">9:00 – 20:00</p></div>
+      <div class="schedule-day"><p class="schedule-day-name">Miércoles</p><p style="font-size:0.8rem;color:var(--texto);">9:00 – 20:00</p></div>
+      <div class="schedule-day"><p class="schedule-day-name">Jueves</p><p style="font-size:0.8rem;color:var(--texto);">9:00 – 20:00</p></div>
+      <div class="schedule-day"><p class="schedule-day-name">Viernes</p><p style="font-size:0.8rem;color:var(--texto);">9:00 – 20:00</p></div>
+      <div class="schedule-day"><p class="schedule-day-name">Sábado</p><p style="font-size:0.8rem;color:var(--texto);">8:00 – 12:00</p></div>
+      <div class="schedule-day closed"><p class="schedule-day-name">Domingo</p><p style="font-size:0.8rem;color:var(--texto-muted);">Cerrado</p></div>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <p class="footer-logo">Nails Studio</p>
+  <img class="footer-logo-img" id="footerLogo" src="" alt="TS Nails Studio">
+  <p class="footer-name">TS Nails Studio</p>
   <p class="footer-sub">Manicure · Pedicure · Arte</p>
   <p class="footer-address">
     Diagonal 67 #3-57 · Barrio Los Muiscas · Tunja, Boyacá<br>
-    📞 <a href="https://wa.me/573001234567" style="color:var(--dorado); text-decoration:none;">+57 300 123 4567</a>
+    📱 <a href="https://wa.me/573001234567" style="color:var(--dorado);text-decoration:none;" id="footerWA">WhatsApp</a>
   </p>
-  <p class="footer-copy">© 2025 Nails Studio · Todos los derechos reservados</p>
+  <p class="footer-copy">© 2025 TS Nails Studio · Todos los derechos reservados</p>
 </footer>
 
 <!-- CARRITO FAB -->
 <button class="cart-fab" id="cartFab" onclick="openCartModal()">
-  🛒
-  <span class="cart-badge" id="cartBadge">0</span>
+  🛒<span class="cart-badge" id="cartBadge">0</span>
 </button>
 
-<!-- MODAL: RESERVAR CITA -->
+<!-- MODAL RESERVA -->
 <div class="modal-overlay" id="bookingModal">
   <div class="modal modal-lg">
     <div class="modal-header">
@@ -184,118 +379,109 @@
       <button class="modal-close" onclick="closeModal('bookingModal')">✕</button>
     </div>
     <div class="modal-body">
-
-      <!-- STEPS BAR -->
       <div class="steps-bar">
-        <div class="step-item">
-          <div class="step-num active" id="s1">1</div>
-        </div>
+        <div class="step-num active" id="s1">1</div>
         <div class="step-connector" id="sc1"></div>
-        <div class="step-item">
-          <div class="step-num" id="s2">2</div>
-        </div>
+        <div class="step-num" id="s2">2</div>
         <div class="step-connector" id="sc2"></div>
-        <div class="step-item">
-          <div class="step-num" id="s3">3</div>
-        </div>
+        <div class="step-num" id="s3">3</div>
       </div>
 
-      <!-- PASO 1: Fecha y Hora -->
+      <!-- PASO 1 -->
       <div id="step1">
-        <div class="form-group">
-          <p class="form-label">Selecciona una fecha</p>
-          <div class="calendar-wrap">
-            <div class="cal-header">
-              <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
-              <span class="cal-month-label" id="calMonthLabel"></span>
-              <button class="cal-nav" onclick="changeMonth(1)">›</button>
-            </div>
-            <div class="cal-grid" id="calGrid"></div>
+        <p class="form-label" style="margin-bottom:8px;">Selecciona una fecha</p>
+        <div class="avail-cal-wrap">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+            <span class="cal-month-label" id="calMonthLabel"></span>
+            <button class="cal-nav" onclick="changeMonth(1)">›</button>
           </div>
+          <div class="cal-grid" id="calGrid"></div>
         </div>
-        <div class="form-group" id="timeSlotsWrap" style="display:none;">
-          <p class="slots-title">Horarios disponibles</p>
+        <div id="timeSlotsWrap" style="display:none;margin-top:16px;">
+          <p class="slots-title">Horarios disponibles — <span id="selectedDateLabel" style="color:var(--dorado);"></span></p>
           <div class="time-grid" id="timeGrid"></div>
+          <div class="slot-legend" style="margin-top:10px;">
+            <div class="legend-item"><div class="legend-dot legend-free"></div>Disponible</div>
+            <div class="legend-item"><div class="legend-dot legend-blocked"></div>Reservado</div>
+          </div>
         </div>
         <button class="btn btn-gold btn-full" onclick="goStep(2)" id="btnStep1" style="margin-top:16px;" disabled>Continuar →</button>
       </div>
 
-      <!-- PASO 2: Servicios + datos -->
+      <!-- PASO 2 -->
       <div id="step2" style="display:none;">
         <div class="form-group">
           <p class="form-label">Servicios seleccionados</p>
-          <div id="step2ServicesList" style="margin-bottom:12px;"></div>
-          <button class="btn btn-outline btn-sm" onclick="closeModal('bookingModal'); setTimeout(()=>openBookingModal(),100)">+ Agregar servicio</button>
+          <div id="step2ServicesList" style="margin-bottom:10px;"></div>
+          <button class="btn btn-outline btn-sm" onclick="closeModal('bookingModal');setTimeout(()=>openBookingModal(),100)">+ Cambiar servicios</button>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Nombre completo *</label>
-            <input type="text" class="form-input" id="clientName" placeholder="Tu nombre">
+            <input type="text" class="form-input" id="clientName" placeholder="Tu nombre completo">
           </div>
           <div class="form-group">
-            <label class="form-label">Teléfono / WhatsApp *</label>
-            <input type="tel" class="form-input" id="clientPhone" placeholder="+57 300 000 0000">
+            <label class="form-label">WhatsApp *</label>
+            <input type="tel" class="form-input" id="clientPhone" placeholder="300 123 4567">
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Notas adicionales</label>
-          <textarea class="form-textarea" id="clientNotes" placeholder="Ej: quiero diseño de flores, color nude..."></textarea>
+          <label class="form-label">Notas (opcional)</label>
+          <textarea class="form-textarea" id="clientNotes" placeholder="Ej: quiero diseño floral, color nude..."></textarea>
         </div>
         <div class="form-group">
-          <label class="form-label">Soporte de pago (opcional)</label>
+          <label class="form-label">Comprobante de pago (opcional)</label>
           <div class="file-upload-area" onclick="document.getElementById('paymentProof').click()">
             <div class="file-upload-icon">📎</div>
-            <p class="file-upload-text">Adjunta captura de transferencia o Nequi</p>
-            <p class="file-upload-text" style="color:var(--texto-muted);font-size:0.72rem;margin-top:4px;">JPG, PNG — máx. 5MB</p>
+            <p class="file-upload-text">Adjunta captura de Nequi o transferencia</p>
+            <p class="file-upload-text" style="font-size:0.7rem;margin-top:3px;color:var(--borde-hover);">JPG, PNG — máx. 5MB</p>
             <input type="file" id="paymentProof" accept="image/*" onchange="previewFile(this)">
           </div>
-          <div id="filePreview" style="display:none; margin-top:8px;">
-            <img id="filePreviewImg" style="max-height:80px; border-radius:6px; border:1px solid var(--borde);">
-            <span style="font-size:0.78rem; color:var(--success); margin-left:8px;">✓ Archivo adjunto</span>
+          <div id="filePreview" style="display:none;margin-top:8px;align-items:center;gap:8px;">
+            <img id="filePreviewImg" style="max-height:70px;border-radius:4px;border:1px solid var(--borde);">
+            <span style="font-size:0.76rem;color:var(--success);">✓ Archivo listo</span>
           </div>
         </div>
         <div style="display:flex;gap:10px;margin-top:4px;">
           <button class="btn btn-outline btn-full" onclick="goStep(1)">← Atrás</button>
-          <button class="btn btn-gold btn-full" onclick="goStep(3)">Revisar reserva →</button>
+          <button class="btn btn-gold btn-full" onclick="goStep(3)">Revisar →</button>
         </div>
       </div>
 
-      <!-- PASO 3: Resumen -->
+      <!-- PASO 3 -->
       <div id="step3" style="display:none;">
         <div class="summary-card">
-          <p class="label">FECHA Y HORA</p>
-          <p class="value" id="summaryDateTime" style="color:var(--dorado-light);font-weight:600;"></p>
-          <p class="label" style="margin-top:8px;">SERVICIOS</p>
+          <p class="s-label">Fecha y hora</p>
+          <p class="s-value" id="summaryDateTime" style="color:var(--dorado-light);font-weight:600;"></p>
+          <p class="s-label" style="margin-top:8px;">Servicios</p>
           <div id="summaryServices"></div>
-          <p class="label" style="margin-top:8px;">CLIENTE</p>
-          <p class="value" id="summaryClient"></p>
-          <div style="border-top:1px solid rgba(255,255,255,0.1);margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:0.72rem;letter-spacing:2px;color:var(--madera);">TOTAL ESTIMADO</span>
-            <span style="font-size:1.5rem;color:var(--dorado);font-family:'Cormorant Garamond',serif;font-weight:700;" id="summaryTotal"></span>
+          <p class="s-label" style="margin-top:8px;">Cliente</p>
+          <p class="s-value" id="summaryClient"></p>
+          <div style="border-top:1px solid var(--borde);margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.68rem;letter-spacing:2px;color:var(--madera);text-transform:uppercase;">Total estimado</span>
+            <span style="font-size:1.4rem;color:var(--dorado);font-family:'Cormorant Garamond',serif;font-weight:700;" id="summaryTotal"></span>
           </div>
         </div>
-        <div style="background:rgba(201,168,76,0.06);border:1px solid var(--borde);border-radius:8px;padding:14px;margin-bottom:16px;font-size:0.8rem;color:var(--texto-muted);line-height:1.6;">
-          ✅ Al confirmar, recibirás un mensaje de WhatsApp con los detalles de tu cita.<br>
-          ⏰ Por favor llega 5 minutos antes de tu cita.
-        </div>
+        <p style="font-size:0.78rem;color:var(--texto-muted);line-height:1.7;background:var(--dorado-glow);border:1px solid var(--borde);border-radius:6px;padding:12px;margin-bottom:16px;">
+          ✅ Al confirmar, se abrirá WhatsApp para notificar al negocio.<br>
+          ⏰ Por favor llega 5 minutos antes de tu cita.<br>
+          ❌ Cancelaciones con mínimo 2 horas de anticipación.
+        </p>
         <div style="display:flex;gap:10px;">
           <button class="btn btn-outline btn-full" onclick="goStep(2)">← Atrás</button>
           <button class="btn btn-gold btn-full" onclick="confirmBooking()" id="btnConfirm">✦ Confirmar Cita</button>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- MODAL: CARRITO -->
+<!-- MODAL CARRITO -->
 <div class="modal-overlay" id="cartModal">
   <div class="modal">
     <div class="modal-header">
-      <div>
-        <p class="modal-title">🛒 Mi Pedido</p>
-        <p class="modal-subtitle">Servicios y productos seleccionados</p>
-      </div>
+      <div><p class="modal-title">💅 Mi Selección</p><p class="modal-subtitle">Servicios agregados</p></div>
       <button class="modal-close" onclick="closeModal('cartModal')">✕</button>
     </div>
     <div class="modal-body">
@@ -307,16 +493,16 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline btn-full" onclick="closeModal('cartModal')">Seguir eligiendo</button>
-      <button class="btn btn-gold btn-full" onclick="closeModal('cartModal'); openBookingModal()">Reservar con esto ✦</button>
+      <button class="btn btn-gold btn-full" onclick="closeModal('cartModal');openBookingModal()">Reservar ✦</button>
     </div>
   </div>
 </div>
 
-<!-- FIREBASE SDKs MODULARES -->
+<!-- FIREBASE -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-  import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCj_wF-627mJPQVXmylJdks9bZESmwwm2A",
@@ -328,15 +514,395 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  window.db = getFirestore(app);
-  window.auth = getAuth(app);
-  window.provider = new GoogleAuthProvider();
-  
-  console.log('✅ Firebase inicializado correctamente');
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  // Exponer Firebase al scope global
+  window._fb = { db, auth, collection, getDocs, addDoc, query, where, orderBy, doc, getDoc, onSnapshot };
+  window.dispatchEvent(new Event('firebaseReady'));
 </script>
 
-<!-- App principal -->
-<script type="module" src="js/app.js"></script>
+<script src="js/logo.js"></script>
+<script>
+// ── LOGO ──
+window.addEventListener('load', () => {
+  const logo = window.LOGO_B64 || '';
+  ['headerLogo','heroLogo','footerLogo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && logo) el.src = logo;
+  });
+});
 
+// ── ESTADO ──
+let allServices = [], allCategories = [], cart = [];
+let selectedDate = null, selectedTime = null;
+let bookMonth = new Date().getMonth(), bookYear = new Date().getFullYear();
+let pubMonth = new Date().getMonth(), pubYear = new Date().getFullYear();
+let pubSelectedDate = null;
+
+const SCHEDULE = { 1:{o:'09:00',c:'20:00'}, 2:{o:'09:00',c:'20:00'}, 3:{o:'09:00',c:'20:00'}, 4:{o:'09:00',c:'20:00'}, 5:{o:'09:00',c:'20:00'}, 6:{o:'08:00',c:'12:00'}, 0:null };
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MONTHS_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const DAYS_ES = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+
+// ── INIT ──
+window.addEventListener('firebaseReady', () => {
+  loadCategories();
+  loadServices();
+  renderCalendar();
+  renderPublicCalendar();
+});
+
+// ── TOAST ──
+function showToast(msg, type='info') {
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  t.innerHTML = `<span>${{success:'✓',error:'✕',info:'✦'}[type]}</span> ${msg}`;
+  tc.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+// ── MENÚ ──
+function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+
+// ── FIREBASE HELPERS ──
+async function fbGet(col, ...constraints) {
+  const { db, collection, getDocs, query } = window._fb;
+  const q = constraints.length ? query(collection(db, col), ...constraints) : collection(db, col);
+  return (await getDocs(q)).docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
+// ── CATEGORÍAS ──
+async function loadCategories() {
+  try {
+    const { orderBy } = window._fb;
+    allCategories = await fbGet('categorias', orderBy('orden'));
+  } catch { allCategories = [{id:'manicura',nombre:'Manicura'},{id:'pedicura',nombre:'Pedicura'}]; }
+  renderCategoryTabs();
+}
+
+function renderCategoryTabs() {
+  const c = document.getElementById('categoryTabs');
+  if (!c) return;
+  c.innerHTML = `<button class="cat-tab active" onclick="filterServices('all',this)">Todos</button>` +
+    allCategories.map(cat => `<button class="cat-tab" onclick="filterServices('${cat.id}',this)">${cat.nombre}</button>`).join('');
+}
+
+// ── SERVICIOS ──
+async function loadServices() {
+  try {
+    const { where } = window._fb;
+    const snap = await fbGet('servicios', where('activo','==',true));
+    allServices = snap.length ? snap : getDemoServices();
+  } catch { allServices = getDemoServices(); }
+  renderServices(allServices);
+}
+
+function getDemoServices() {
+  return [
+    {id:'s1',nombre:'Manicura Tradicional',categoria:'manicura',precio:20000,duracion:45,descripcion:'Limpieza, corte y esmaltado clásico.',activo:true},
+    {id:'s2',nombre:'Semipermanente Liso',categoria:'manicura',precio:45000,duracion:60,descripcion:'Esmalte semipermanente de larga duración.',activo:true},
+    {id:'s3',nombre:'Semipermanente Diseño y Apliques',categoria:'manicura',precio:50000,duracion:75,descripcion:'Semipermanente con diseño personalizado.',activo:true},
+    {id:'s4',nombre:'Dipping Liso',categoria:'manicura',precio:55000,duracion:90,descripcion:'Sistema en polvo acrílico liso.',activo:true},
+    {id:'s5',nombre:'Dipping Diseño y Apliques',categoria:'manicura',precio:60000,duracion:100,descripcion:'Dipping con diseño y apliques.',activo:true},
+    {id:'s6',nombre:'Kapping Liso',categoria:'manicura',precio:65000,duracion:90,descripcion:'Kapping liso resistente.',activo:true},
+    {id:'s7',nombre:'Kapping Diseño y Apliques',categoria:'manicura',precio:70000,duracion:110,descripcion:'Kapping con diseño a elección.',activo:true},
+    {id:'s8',nombre:'Builder Gel Liso',categoria:'manicura',precio:75000,duracion:100,descripcion:'Construcción en gel de alta resistencia.',activo:true},
+    {id:'s9',nombre:'Builder Gel Diseño y Apliques',categoria:'manicura',precio:80000,duracion:120,descripcion:'Builder gel con diseño exclusivo.',activo:true},
+    {id:'s10',nombre:'Soft Gel',categoria:'manicura',precio:80000,duracion:90,descripcion:'Gel suave flexible de larga duración.',activo:true},
+    {id:'s11',nombre:'Pedicura Tradicional',categoria:'pedicura',precio:25000,duracion:45,descripcion:'Limpieza, corte y esmaltado de pies.',activo:true},
+    {id:'s12',nombre:'Pedicura Semipermanente',categoria:'pedicura',precio:45000,duracion:60,descripcion:'Pedicura con esmalte semipermanente.',activo:true},
+  ];
+}
+
+function renderServices(services) {
+  const g = document.getElementById('servicesGrid');
+  if (!g) return;
+  if (!services.length) { g.innerHTML = `<p style="color:var(--texto-muted);">Sin servicios disponibles.</p>`; return; }
+  g.innerHTML = services.map(s => {
+    const inCart = cart.some(c => c.id === s.id);
+    const h = Math.floor(s.duracion/60), m = s.duracion%60;
+    const dur = h > 0 ? `${h}h${m>0?` ${m}min`:''}` : `${m} min`;
+    const cat = allCategories.find(c => c.id === s.categoria)?.nombre || s.categoria;
+    return `<div class="service-card" data-cat="${s.categoria}">
+      <p class="service-cat-badge">✦ ${cat}</p>
+      <p class="service-name">${s.nombre}</p>
+      <p class="service-duration">⏱ ${dur}</p>
+      <p class="service-price">$${Number(s.precio).toLocaleString('es-CO')} <small>COP</small></p>
+      <button class="btn-add-service ${inCart?'added':''}" id="cartBtn-${s.id}" onclick="toggleServiceCart('${s.id}')">
+        ${inCart?'✓ En mi cita':'+ Agregar a mi cita'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function filterServices(catId, btn) {
+  document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderServices(catId === 'all' ? allServices : allServices.filter(s => s.categoria === catId));
+}
+
+// ── CARRITO ──
+function toggleServiceCart(id) {
+  const s = allServices.find(x => x.id === id);
+  if (!s) return;
+  const idx = cart.findIndex(c => c.id === id);
+  if (idx > -1) { cart.splice(idx,1); showToast(`"${s.nombre}" removido`,'info'); }
+  else { cart.push({id:s.id,name:s.nombre,price:s.precio,duration:s.duracion,type:'service'}); showToast(`"${s.nombre}" agregado ✦`,'success'); }
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const fab = document.getElementById('cartFab');
+  const badge = document.getElementById('cartBadge');
+  fab.style.display = cart.length > 0 ? 'flex' : 'none';
+  badge.textContent = cart.length;
+  allServices.forEach(s => {
+    const btn = document.getElementById(`cartBtn-${s.id}`);
+    if (!btn) return;
+    const inCart = cart.some(c => c.id === s.id);
+    btn.className = `btn-add-service ${inCart?'added':''}`;
+    btn.textContent = inCart ? '✓ En mi cita' : '+ Agregar a mi cita';
+  });
+}
+
+function openCartModal() {
+  const list = document.getElementById('cartItemsList');
+  const total = document.getElementById('cartTotalDisplay');
+  if (!cart.length) { list.innerHTML = `<p style="color:var(--texto-muted);text-align:center;padding:20px;">No has agregado servicios aún</p>`; total.textContent = '$0'; }
+  else {
+    list.innerHTML = cart.map(i => `<div class="cart-item"><span class="cart-item-name">💅 ${i.name}</span><span class="cart-item-price">$${Number(i.price).toLocaleString('es-CO')}</span><button class="cart-item-remove" onclick="removeFromCart('${i.id}')">✕</button></div>`).join('');
+    total.textContent = `$${cart.reduce((a,b)=>a+b.price,0).toLocaleString('es-CO')} COP`;
+  }
+  openModal('cartModal');
+}
+
+function removeFromCart(id) { cart = cart.filter(c => c.id !== id); updateCartUI(); openCartModal(); }
+
+// ── CALENDARIOS ──
+function renderCalendar() { _renderCal('calGrid','calMonthLabel', bookMonth, bookYear, true); }
+function renderPublicCalendar() { _renderCal('pubCalGrid','pubCalLabel', pubMonth, pubYear, false); }
+
+function _renderCal(gridId, labelId, month, year, isBooking) {
+  const label = document.getElementById(labelId);
+  const grid = document.getElementById(gridId);
+  if (!label || !grid) return;
+  label.textContent = `${MONTHS[month]} ${year}`;
+  const dayNames = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  let html = dayNames.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (let i=0;i<firstDay;i++) html += `<div class="cal-day empty"></div>`;
+  for (let d=1;d<=daysInMonth;d++) {
+    const date = new Date(year, month, d);
+    const dow = date.getDay();
+    const isPast = date < today;
+    const isToday = date.getTime() === today.getTime();
+    const isSunday = dow === 0;
+    const dateStr = fmtDate(date);
+    const isSel = isBooking ? selectedDate === dateStr : pubSelectedDate === dateStr;
+    let cls = 'cal-day';
+    if (isPast) cls += ' past';
+    else if (isSunday) cls += ' sunday';
+    if (isToday) cls += ' today';
+    if (isSel) cls += ' selected';
+    const clickFn = isBooking ? `selectDate('${dateStr}',${dow})` : `selectPubDate('${dateStr}',${dow})`;
+    const clickable = !isPast && !isSunday;
+    html += `<div class="${cls}" ${clickable?`onclick="${clickFn}"`:''}>${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function changeMonth(dir) { bookMonth += dir; if(bookMonth>11){bookMonth=0;bookYear++;} if(bookMonth<0){bookMonth=11;bookYear--;} renderCalendar(); }
+function changeMonthPublic(dir) { pubMonth += dir; if(pubMonth>11){pubMonth=0;pubYear++;} if(pubMonth<0){pubMonth=11;pubYear--;} renderPublicCalendar(); }
+
+// ── SLOTS PÚBLICOS (solo lectura, muestra ocupados) ──
+async function selectPubDate(dateStr, dow) {
+  pubSelectedDate = dateStr;
+  renderPublicCalendar();
+  const wrap = document.getElementById('pubSlotsWrap');
+  const empty = document.getElementById('pubSlotsEmpty');
+  const grid = document.getElementById('pubTimeGrid');
+  const title = document.getElementById('pubSlotsTitle');
+  const sched = SCHEDULE[dow];
+  if (!sched) { empty.textContent = 'Este día está cerrado.'; wrap.style.display='none'; empty.style.display='block'; return; }
+  wrap.style.display = 'block'; empty.style.display = 'none';
+  title.textContent = `Horarios — ${formatDateDisplay(dateStr)}`;
+  grid.innerHTML = `<div style="color:var(--texto-muted);font-size:0.8rem;grid-column:span 4;">Cargando...</div>`;
+  const blocked = await getBlockedSlots(dateStr);
+  const slots = generateSlots(sched.o, sched.c, 30, 30, blocked); // 30min mínimo para ver todos
+  grid.innerHTML = slots.map(s => `<div class="time-slot ${s.blocked?'blocked':''}" title="${s.blocked?'Hora reservada':'Disponible'}">${s.time}</div>`).join('');
+}
+
+// ── SLOTS BOOKING ──
+async function selectDate(dateStr, dow) {
+  selectedDate = dateStr; selectedTime = null;
+  document.getElementById('btnStep1').disabled = true;
+  document.getElementById('selectedDateLabel').textContent = formatDateDisplay(dateStr);
+  renderCalendar();
+  const sched = SCHEDULE[dow];
+  const grid = document.getElementById('timeGrid');
+  const wrap = document.getElementById('timeSlotsWrap');
+  wrap.style.display = 'block';
+  if (!sched) { grid.innerHTML = `<p style="color:var(--texto-muted);">Cerrado este día.</p>`; return; }
+  grid.innerHTML = `<div style="color:var(--texto-muted);font-size:0.8rem;grid-column:span 4;">Cargando...</div>`;
+  const totalDur = cart.filter(c=>c.type==='service').reduce((a,b)=>a+(b.duration||60),0) || 60;
+  const blocked = await getBlockedSlots(dateStr);
+  const slots = generateSlots(sched.o, sched.c, 30, totalDur, blocked);
+  grid.innerHTML = slots.map(s => `<div class="time-slot ${s.blocked?'blocked':''}" ${!s.blocked?`onclick="selectTime('${s.time}',this)"`:''} title="${s.blocked?'Hora reservada':'Disponible'}">${s.time}</div>`).join('');
+}
+
+async function getBlockedSlots(dateStr) {
+  const blocked = [];
+  try {
+    const { db, doc, getDoc, collection, getDocs, query, where } = window._fb;
+    const docSnap = await getDoc(doc(db,'bloqueados',dateStr));
+    if (docSnap.exists()) (docSnap.data().slots||[]).forEach(s => blocked.push(s));
+    const q = query(collection(db,'reservas'), where('fecha','==',dateStr), where('estado','in',['pendiente','confirmada']));
+    const snap = await getDocs(q);
+    snap.docs.forEach(d => {
+      const r = d.data();
+      const start = timeToMinutes(r.hora);
+      for (let m=0; m<(r.duracionTotal||60); m+=30) blocked.push(minutesToTime(start+m));
+    });
+  } catch(e) { console.log('getBlockedSlots error:',e); }
+  return blocked;
+}
+
+function selectTime(time, el) {
+  document.querySelectorAll('#timeGrid .time-slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTime = time;
+  document.getElementById('btnStep1').disabled = false;
+}
+
+function generateSlots(open, close, interval, duration, blocked) {
+  const slots = [], end = timeToMinutes(close);
+  let cur = timeToMinutes(open);
+  while (cur + duration <= end) {
+    const t = minutesToTime(cur);
+    let isBlocked = false;
+    for (let m=0; m<duration; m+=30) { if(blocked.includes(minutesToTime(cur+m))){ isBlocked=true; break; } }
+    slots.push({time:t, blocked:isBlocked});
+    cur += interval;
+  }
+  return slots;
+}
+
+// ── WIZARD ──
+function goStep(step) {
+  if (step===2 && (!selectedDate||!selectedTime)) { showToast('Selecciona fecha y hora primero','error'); return; }
+  if (step===3) {
+    const name = document.getElementById('clientName').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    if (!name) { showToast('Ingresa tu nombre','error'); return; }
+    if (!phone) { showToast('Ingresa tu WhatsApp','error'); return; }
+    if (!cart.filter(c=>c.type==='service').length) { showToast('Agrega al menos un servicio','error'); return; }
+    renderSummary();
+  }
+  if (step===2) renderStep2Services();
+  [1,2,3].forEach(i => {
+    document.getElementById(`step${i}`).style.display = i===step?'block':'none';
+    const dot = document.getElementById(`s${i}`);
+    if (i<step) { dot.className='step-num done'; dot.textContent='✓'; }
+    else if (i===step) { dot.className='step-num active'; dot.textContent=i; }
+    else { dot.className='step-num'; dot.textContent=i; }
+    if (i<3) document.getElementById(`sc${i}`).className=`step-connector ${i<step?'done':''}`;
+  });
+  document.getElementById('bookingStepLabel').textContent = ['','Paso 1 de 3 — Fecha y hora','Paso 2 de 3 — Tus datos','Paso 3 de 3 — Confirmar'][step];
+}
+
+function renderStep2Services() {
+  const svcs = cart.filter(c=>c.type==='service');
+  if (!svcs.length) { document.getElementById('step2ServicesList').innerHTML=`<p style="color:var(--error);font-size:0.82rem;">⚠ Sin servicios. Cierra y agrega desde el catálogo.</p>`; return; }
+  document.getElementById('step2ServicesList').innerHTML = svcs.map(s=>`<div class="cart-item"><span class="cart-item-name">💅 ${s.name}</span><span class="cart-item-price">$${Number(s.price).toLocaleString('es-CO')}</span></div>`).join('');
+}
+
+function renderSummary() {
+  const name = document.getElementById('clientName').value.trim();
+  const phone = document.getElementById('clientPhone').value.trim();
+  document.getElementById('summaryDateTime').textContent = `${formatDateDisplay(selectedDate)} a las ${selectedTime}`;
+  document.getElementById('summaryClient').textContent = `${name} · ${phone}`;
+  document.getElementById('summaryTotal').textContent = `$${cart.reduce((a,b)=>a+b.price,0).toLocaleString('es-CO')} COP`;
+  document.getElementById('summaryServices').innerHTML = cart.map(c=>`<p style="color:var(--texto);font-size:0.84rem;margin-bottom:2px;">• ${c.name} — $${Number(c.price).toLocaleString('es-CO')}</p>`).join('');
+}
+
+// ── CONFIRMAR RESERVA ──
+async function confirmBooking() {
+  const btn = document.getElementById('btnConfirm');
+  btn.disabled = true; btn.textContent = 'Guardando...';
+  const name = document.getElementById('clientName').value.trim();
+  const phone = document.getElementById('clientPhone').value.trim();
+  const notes = document.getElementById('clientNotes').value.trim();
+  const svcs = cart.filter(c=>c.type==='service');
+  const totalDur = svcs.reduce((a,b)=>a+(b.duration||60),0);
+  const totalPrice = cart.reduce((a,b)=>a+b.price,0);
+  try {
+    const { db, collection, addDoc } = window._fb;
+    await addDoc(collection(db,'reservas'), {
+      nombre: name, telefono: phone, fecha: selectedDate, hora: selectedTime,
+      servicios: svcs.map(s=>({id:s.id,nombre:s.name,precio:s.price,duracion:s.duration})),
+      duracionTotal: totalDur, totalPrecio: totalPrice, notas: notes,
+      estado: 'pendiente', creadoEn: new Date().toISOString()
+    });
+    sendWhatsApp(name, phone, selectedDate, selectedTime, svcs, totalPrice);
+    showToast('¡Cita reservada! 🎉 Revisa tu WhatsApp.','success');
+    cart=[]; updateCartUI(); selectedDate=null; selectedTime=null;
+    document.getElementById('timeSlotsWrap').style.display='none';
+    closeModal('bookingModal');
+    ['clientName','clientPhone','clientNotes'].forEach(id => document.getElementById(id).value='');
+  } catch(e) {
+    console.error(e); showToast('Error al guardar. Intenta de nuevo.','error');
+  } finally {
+    btn.disabled=false; btn.textContent='✦ Confirmar Cita';
+  }
+}
+
+function sendWhatsApp(name, phone, date, time, svcs, total) {
+  const bizPhone = '573001234567'; // ← CAMBIA POR TU NÚMERO
+  const dateStr = formatDateDisplay(date);
+  const svcList = svcs.map(s=>`• ${s.nombre} ($${Number(s.price||s.precio).toLocaleString('es-CO')})`).join('%0A');
+  const bizMsg = `✨ *NUEVA CITA — TS Nails Studio*%0A%0A👤 *Cliente:* ${name}%0A📱 *WhatsApp:* ${phone}%0A📅 *Fecha:* ${dateStr}%0A🕐 *Hora:* ${time}%0A%0A💅 *Servicios:*%0A${svcList}%0A%0A💰 *Total:* $${Number(total).toLocaleString('es-CO')} COP`;
+  window.open(`https://wa.me/${bizPhone}?text=${bizMsg}`, '_blank');
+  const clientMsg = `✨ *¡Tu cita está confirmada en TS Nails Studio!*%0A%0A📅 *Fecha:* ${dateStr}%0A🕐 *Hora:* ${time}%0A💅 *Servicios:* ${svcs.map(s=>s.nombre||s.name).join(', ')}%0A%0A📍 Diagonal 67 #3-57, Los Muiscas, Tunja%0A⏰ Por favor llega 5 minutos antes.%0A❌ Cancelaciones con 2h de anticipación.%0A%0A¡Te esperamos! 💅`;
+  const cleanPhone = phone.replace(/\D/g,'');
+  if (cleanPhone.length >= 10) setTimeout(()=>window.open(`https://wa.me/57${cleanPhone}?text=${clientMsg}`,'_blank'), 1500);
+}
+
+// ── MODALES ──
+function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+function openBookingModal() { goStep(1); renderCalendar(); openModal('bookingModal'); }
+
+document.addEventListener('click', e => { if(e.target.classList.contains('modal-overlay')){ e.target.classList.remove('open'); document.body.style.overflow=''; } });
+
+// ── FILE PREVIEW ──
+function previewFile(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => { document.getElementById('filePreviewImg').src=e.target.result; document.getElementById('filePreview').style.display='flex'; };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// ── HELPERS ──
+function timeToMinutes(t) { const [h,m]=t.split(':').map(Number); return h*60+m; }
+function minutesToTime(m) { return `${Math.floor(m/60).toString().padStart(2,'0')}:${(m%60).toString().padStart(2,'0')}`; }
+function fmtDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function formatDateDisplay(dateStr) {
+  const [y,m,d] = dateStr.split('-');
+  const date = new Date(y, m-1, d);
+  return `${DAYS_ES[date.getDay()]}, ${d} de ${MONTHS_ES[m-1]} de ${y}`;
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('siteHeader').style.background = window.scrollY > 50 ? 'rgba(13,11,9,0.99)' : 'rgba(13,11,9,0.94)';
+});
+
+// Exponer funciones
+Object.assign(window, { toggleMenu, filterServices, toggleServiceCart, removeFromCart, openCartModal, openBookingModal, openModal, closeModal, changeMonth, changeMonthPublic, selectDate, selectPubDate, selectTime, goStep, confirmBooking, previewFile });
+</script>
 </body>
 </html>
