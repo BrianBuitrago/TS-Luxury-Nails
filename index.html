@@ -38,7 +38,7 @@
     .site-header { position:fixed; top:0; left:0; right:0; z-index:100; padding:0 24px; background:rgba(13,11,9,0.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--borde); transition:background 0.3s; }
     .header-inner { max-width:1140px; margin:0 auto; height:68px; display:flex; align-items:center; justify-content:space-between; }
     .logo-wrap { display:flex; align-items:center; gap:10px; }
-    .logo-img { width:44px; height:44px; object-fit:contain; }
+    .logo-img { width:44px; height:44px; object-fit:contain; background:transparent; mix-blend-mode:lighten; }
     .logo-text { display:flex; flex-direction:column; line-height:1; }
     .logo-main { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:700; color:var(--dorado); letter-spacing:3px; text-transform:uppercase; }
     .logo-sub { font-size:0.6rem; letter-spacing:4px; color:var(--madera); text-transform:uppercase; margin-top:1px; }
@@ -58,7 +58,7 @@
     .hero-ring-2 { width:420px; height:420px; top:50%; left:50%; transform:translate(-50%,-50%); animation-direction:reverse; animation-duration:35s; }
     @keyframes slowSpin { from{transform:translate(-50%,-50%) rotate(0deg);} to{transform:translate(-50%,-50%) rotate(360deg);} }
     .hero-content { position:relative; text-align:center; max-width:680px; }
-    .hero-logo { width:140px; height:140px; object-fit:contain; margin-bottom:24px; opacity:0; animation:fadeUp 0.8s ease 0.2s forwards; filter:drop-shadow(0 0 20px rgba(201,168,76,0.3)); }
+    .hero-logo { width:140px; height:140px; object-fit:contain; background:transparent; mix-blend-mode:lighten; margin-bottom:24px; opacity:0; animation:fadeUp 0.8s ease 0.2s forwards; filter:drop-shadow(0 0 20px rgba(201,168,76,0.3)); }
     .hero-eyebrow { font-size:0.7rem; letter-spacing:6px; text-transform:uppercase; color:var(--madera); margin-bottom:16px; opacity:0; animation:fadeUp 0.8s ease 0.4s forwards; }
     .hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.8rem,7vw,5.5rem); line-height:1.0; color:var(--texto); margin-bottom:8px; opacity:0; animation:fadeUp 0.8s ease 0.5s forwards; }
     .hero h1 em { color:var(--dorado); font-style:italic; }
@@ -252,6 +252,7 @@
       <li><a href="#servicios">Servicios</a></li>
       <li><a href="#disponibilidad">Disponibilidad</a></li>
       <li><a href="#horarios">Horarios</a></li>
+      <li><a href="admin/" style="color:var(--texto-muted);font-size:0.8rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:8px 12px;border-radius:4px;transition:all 0.2s;text-decoration:none;border:1px solid var(--borde);">🔐 Admin</a></li>
       <li><a href="#" onclick="openBookingModal()" class="btn-reservar-nav">Reservar Cita</a></li>
     </ul>
     <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
