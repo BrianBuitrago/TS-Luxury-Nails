@@ -211,6 +211,7 @@
       <button class="nav-item-sb" id="nav-horarios" onclick="showPage('horarios')"><i class="bi bi-clock"></i>Horarios</button>
       <button class="nav-item-sb" id="nav-bloquear" onclick="showPage('bloquear')"><i class="bi bi-lock"></i>Bloquear Horas</button>
       <button class="nav-item-sb" id="nav-perfil" onclick="showPage('perfil')"><i class="bi bi-person-circle"></i>Mi Perfil</button>
+      <button class="nav-item-sb" id="nav-config" onclick="showPage('config')"><i class="bi bi-gear"></i>Configuración</button>
     </nav>
     <div class="sidebar-footer">
       <p style="font-size:0.7rem;color:var(--texto-muted);margin-bottom:6px;" id="adminEmailSb"></p>
@@ -364,6 +365,49 @@
               <input type="password" class="form-control" id="confirmPass" placeholder="Repite la contraseña">
             </div>
             <button class="btn-gold" onclick="changePassword()"><i class="bi bi-shield-lock"></i>Actualizar Contraseña</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- CONFIG -->
+    <div class="admin-page" id="page-config">
+      <p class="eyebrow">Sistema</p>
+      <h2 class="page-title">Configuración</h2>
+      <div class="section-line"></div>
+      <div class="row g-3">
+        <div class="col-12 col-md-7">
+          <div class="admin-card">
+            <p class="eyebrow mb-1">WhatsApp del negocio</p>
+            <h5 class="font-serif text-dorado mb-3">Numero de contacto</h5>
+            <p style="font-size:0.8rem;color:var(--texto-muted);margin-bottom:16px;line-height:1.6;">
+              Este es el numero al que llegan las notificaciones cuando un cliente hace una reserva.<br>
+              Ingresa el numero con codigo de pais sin espacios ni guiones. Ej: <span style="color:var(--dorado);">573001234567</span>
+            </p>
+            <div class="mb-3">
+              <label class="form-label-c">Numero de WhatsApp del negocio</label>
+              <input type="tel" class="form-control" id="configWABiz" placeholder="573001234567">
+            </div>
+            <div class="mb-4">
+              <label class="form-label-c">Numero de WhatsApp adicional (opcional)</label>
+              <input type="tel" class="form-control" id="configWABiz2" placeholder="573009876543">
+              <p style="font-size:0.68rem;color:var(--texto-muted);margin-top:4px;">Si hay un segundo numero que debe recibir notificaciones</p>
+            </div>
+            <button class="btn-gold" onclick="saveConfig()"><i class="bi bi-check-lg"></i>Guardar Configuracion</button>
+          </div>
+        </div>
+        <div class="col-12 col-md-5">
+          <div class="admin-card">
+            <p class="eyebrow mb-2">Como agregar la foto del negocio</p>
+            <p style="font-size:0.78rem;color:var(--texto-muted);line-height:1.7;">
+              Para las fotos de servicios:<br>
+              1. Entra a <a href="https://imgbb.com" target="_blank" style="color:var(--dorado);">imgbb.com</a><br>
+              2. Sube tu imagen (gratis, sin registro)<br>
+              3. Clic derecho en la imagen subida<br>
+              4. "Copiar direccion de imagen"<br>
+              5. Pega el link en el campo "Foto" del servicio
+            </p>
           </div>
         </div>
       </div>
@@ -568,7 +612,7 @@ function showPage(page){
   document.getElementById(`page-${page}`).classList.add('active');
   document.getElementById(`nav-${page}`)?.classList.add('active');
   closeSidebar();
-  const loaders={dashboard:loadDashboard,reservas:loadReservas,servicios:loadAdminServicios,categorias:loadAdminCategorias,horarios:loadHorarios};
+  const loaders={dashboard:loadDashboard,reservas:loadReservas,servicios:loadAdminServicios,categorias:loadAdminCategorias,horarios:loadHorarios,config:loadConfig};
   loaders[page]?.();
 }
 
@@ -661,15 +705,15 @@ async function cancelarReserva(id, nombre, telefono, fecha, hora){
   try{
     const{db,doc,updateDoc}=window._fb;
     await updateDoc(doc(db,'reservas',id),{estado:'cancelada'});
-    const msg=`Hola ${nombre}, lamentamos informarte que tu cita en TS Nails Studio del ${fmtDD(fecha)} a las ${t12(hora)} ha sido cancelada. Por favor contáctanos para reagendar. 💅`;
-    window.open(`https://wa.me/${telefono?.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+    const msg='Hola '+nombre+', lamentamos informarte que tu cita en TS Nails Studio del '+fmtDD(fecha)+' a las '+t12(hora)+' ha sido cancelada. Por favor contactanos para reagendar.';
+    const num2=telefono?.replace(/\D/g,'');window.open('https://wa.me/'+num2+'?text='+encodeURIComponent(msg),'_blank');
     showToast('Reserva cancelada','info');loadReservas();loadDashboard();
   }catch{showToast('Error','error');}
 }
 
 function notificarCliente(telefono, nombre, fecha, hora){
-  const msg=`Hola ${nombre} 💅 Te recordamos tu cita en TS Nails Studio el ${fmtDD(fecha)} a las ${t12(hora)}.\n📍 Diagonal 67 #3-57, Barrio Los Muiscas, Tunja.\n¡Te esperamos!`;
-  window.open(`https://wa.me/${telefono?.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+  const msg='Hola '+nombre+', te recordamos tu cita en TS Nails Studio el '+fmtDD(fecha)+' a las '+t12(hora)+'.%0ADiagonal 67 #3-57, Barrio Los Muiscas, Tunja.%0A¡Te esperamos!';
+  const num=telefono?.replace(/\D/g,'');window.open('https://wa.me/'+num+'?text='+msg,'_blank');
 }
 
 // ── CATEGORÍAS ──
@@ -893,7 +937,42 @@ function m2t(m){return `${Math.floor(m/60).toString().padStart(2,'0')}:${(m%60).
 function t12(t){if(!t)return '';const[h,m]=t.split(':').map(Number);const ampm=h<12?'a.m.':'p.m.';const h12=h===0?12:h>12?h-12:h;return h12+':'+(m<10?'0'+m:m)+' '+ampm;}
 function fmtDD(dateStr){if(!dateStr)return '';const[y,m,d]=dateStr.split('-');const date=new Date(y,m-1,d);return `${DAYS_ES[date.getDay()]}, ${d} de ${MONTHS_ES[m-1]} de ${y}`;}
 
-Object.assign(window,{loginWithGoogle,loginWithEmail,doLogout,changePassword,showPage,loadReservas,verReserva,cambiarEstado,cancelarReserva,notificarCliente,openServicioModal,saveServicio,toggleServicio,deleteServicio,loadAdminCategorias,openCatModal,saveCat,deleteCat,saveHorarios,toggleDay,loadBlockedDate,toggleBlock,saveBlockedSlots,previewFoto,openSidebar,closeSidebar});
+// ── CONFIG ──
+let adminConfig = {};
+
+async function loadConfig(){
+  try{
+    const{db,doc,getDoc}=window._fb;
+    const snap=await getDoc(doc(db,'config','general'));
+    adminConfig=snap.exists()?snap.data():{};
+  }catch{ adminConfig={}; }
+  document.getElementById('configWABiz').value=adminConfig.waBiz||'';
+  document.getElementById('configWABiz2').value=adminConfig.waBiz2||'';
+}
+
+async function saveConfig(){
+  const waBiz=document.getElementById('configWABiz').value.replace(/\D/g,'');
+  const waBiz2=document.getElementById('configWABiz2').value.replace(/\D/g,'');
+  if(!waBiz){showToast('Ingresa el numero de WhatsApp','error');return;}
+  try{
+    const{db,doc,setDoc}=window._fb;
+    await setDoc(doc(db,'config','general'),{waBiz,waBiz2,updatedAt:new Date().toISOString()});
+    adminConfig={waBiz,waBiz2};
+    showToast('Configuracion guardada ✓','success');
+  }catch{showToast('Error al guardar','error');}
+}
+
+async function getAdminWA(){
+  if(adminConfig.waBiz) return adminConfig.waBiz;
+  try{
+    const{db,doc,getDoc}=window._fb;
+    const snap=await getDoc(doc(db,'config','general'));
+    if(snap.exists()&&snap.data().waBiz){adminConfig=snap.data();return adminConfig.waBiz;}
+  }catch{}
+  return '573001234567';
+}
+
+Object.assign(window,{loginWithGoogle,loginWithEmail,doLogout,changePassword,showPage,loadReservas,verReserva,cambiarEstado,cancelarReserva,notificarCliente,openServicioModal,saveServicio,toggleServicio,deleteServicio,loadAdminCategorias,openCatModal,saveCat,deleteCat,saveHorarios,toggleDay,loadBlockedDate,toggleBlock,saveBlockedSlots,previewFoto,openSidebar,closeSidebar,saveConfig,loadConfig});
 </script>
 </body>
 </html>

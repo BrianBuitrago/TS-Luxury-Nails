@@ -903,13 +903,28 @@ async function confirmBooking(){
   finally{btn.disabled=false;btn.textContent='✦ Confirmar Cita';}
 }
 
-function sendWA(name,phone,date,time,svcs,total){
-  const biz='573001234567';
+async function getBizPhone(){
+  try{
+    const{db,doc,getDoc}=window._fb;
+    const snap=await getDoc(doc(db,'config','general'));
+    if(snap.exists()&&snap.data().waBiz) return snap.data().waBiz;
+  }catch{}
+  return '573001234567';
+}
+
+async function sendWA(name,phone,date,time,svcs,total){
+  const biz=await getBizPhone();
   const ds=fmtDisplay(date);
-  const sl=svcs.map(s=>`• ${s.nombre||s.name} ($${Number(s.price||s.precio).toLocaleString('es-CO')})`).join('%0A');
-  window.open(`https://wa.me/${biz}?text=✨ *NUEVA CITA — TS Nails Studio*%0A%0A👤 *Cliente:* ${name}%0A📱 *WhatsApp:* ${phone}%0A📅 *Fecha:* ${ds}%0A🕐 *Hora:* ${t12(time)}%0A%0A💅 *Servicios:*%0A${sl}%0A%0A💰 *Total:* $${Number(total).toLocaleString('es-CO')} COP`,'_blank');
+  const hora=t12(time);
+  const svcNames=svcs.map(s=>s.nombre||s.name).join(', ');
+  const svcList=svcs.map(s=>'- '+( s.nombre||s.name)+' ($'+Number(s.price||s.precio).toLocaleString('es-CO')+')').join('%0A');
+  const bizMsg='Nueva cita en TS Nails Studio%0A%0ACliente: '+name+'%0AWhatsApp: '+phone+'%0AFecha: '+ds+'%0AHora: '+hora+'%0A%0AServicios:%0A'+svcList+'%0A%0ATotal: $'+Number(total).toLocaleString('es-CO')+' COP';
+  window.open('https://wa.me/'+biz+'?text='+bizMsg,'_blank');
   const cp=phone.replace(/\D/g,'');
-  if(cp.length>=10) setTimeout(()=>window.open(`https://wa.me/57${cp}?text=✨ *¡Tu cita está confirmada en TS Nails Studio!*%0A%0A📅 *Fecha:* ${ds}%0A🕐 *Hora:* ${t12(time)}%0A💅 *Servicios:* ${svcs.map(s=>s.nombre||s.name).join(', ')}%0A%0A📍 Diagonal 67 #3-57, Los Muiscas, Tunja%0A⏰ Llega 5 minutos antes.%0A%0A¡Te esperamos! 💅`,'_blank'),1500);
+  if(cp.length>=10){
+    const clientMsg='Hola '+name+', tu cita en TS Nails Studio ha sido registrada.%0AFecha: '+ds+'%0AHora: '+hora+'%0AServicios: '+svcNames+'%0A%0ADireccion: Diagonal 67 #3-57, Los Muiscas, Tunja.%0APor favor llega 5 minutos antes.';
+    setTimeout(()=>window.open('https://wa.me/57'+cp+'?text='+clientMsg,'_blank'),1500);
+  }
 }
 
 function openBookingModal(){ goStep(1); renderBookCal(); bsShow('bookingModal'); }
