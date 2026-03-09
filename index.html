@@ -727,7 +727,7 @@ function selectPubTime(time, el) {
   document.querySelectorAll('#pubTimeGrid .time-slot').forEach(s=>s.classList.remove('selected'));
   el.classList.add('selected');
   pubSelectedTime=time;
-  document.getElementById('pubSelectedTimeLabel').textContent=time;
+  document.getElementById('pubSelectedTimeLabel').textContent=t12(time);
   document.getElementById('pubBookingForm').style.display='block';
   renderPubServices();
   document.getElementById('pubSummary').style.display='none';
@@ -810,7 +810,7 @@ async function selectBookDate(ds, dow) {
   const totalDur=cart.filter(c=>c.type==='service').reduce((a,b)=>a+(b.duration||60),0)||60;
   const blocked=await getBlockedSlots(ds);
   const slots=genSlots(sched.o,sched.c,30,totalDur,blocked);
-  grid.innerHTML=slots.map(s=>`<div class="time-slot ${s.blocked?'blocked':''}" ${!s.blocked?`onclick="selectBookTime('${s.time}',this)"`:''}">${s.time}</div>`).join('');
+  grid.innerHTML=slots.map(s=>`<div class="time-slot ${s.blocked?'blocked':''}" ${!s.blocked?`onclick="selectBookTime('${s.time}',this)"`:''}">${t12(s.time)}</div>`).join('');
 }
 
 function selectBookTime(time,el){
@@ -871,7 +871,7 @@ function renderStep2(){
 }
 
 function renderSummary(){
-  document.getElementById('summaryDateTime').textContent=`${fmtDisplay(selectedDate)} a las ${selectedTime}`;
+  document.getElementById('summaryDateTime').textContent=`${fmtDisplay(selectedDate)} a las ${t12(selectedTime)}`;
   document.getElementById('summaryClient').textContent=`${document.getElementById('clientName').value.trim()} · ${document.getElementById('clientPhone').value.trim()}`;
   document.getElementById('summaryTotal').textContent=`$${cart.reduce((a,b)=>a+b.price,0).toLocaleString('es-CO')} COP`;
   document.getElementById('summaryServices').innerHTML=cart.map(c=>`<p style="font-size:0.83rem;margin-bottom:2px;">• ${c.name} — $${Number(c.price).toLocaleString('es-CO')}</p>`).join('');
@@ -907,15 +907,21 @@ function sendWA(name,phone,date,time,svcs,total){
   const biz='573001234567';
   const ds=fmtDisplay(date);
   const sl=svcs.map(s=>`• ${s.nombre||s.name} ($${Number(s.price||s.precio).toLocaleString('es-CO')})`).join('%0A');
-  window.open(`https://wa.me/${biz}?text=✨ *NUEVA CITA — TS Nails Studio*%0A%0A👤 *Cliente:* ${name}%0A📱 *WhatsApp:* ${phone}%0A📅 *Fecha:* ${ds}%0A🕐 *Hora:* ${time}%0A%0A💅 *Servicios:*%0A${sl}%0A%0A💰 *Total:* $${Number(total).toLocaleString('es-CO')} COP`,'_blank');
+  window.open(`https://wa.me/${biz}?text=✨ *NUEVA CITA — TS Nails Studio*%0A%0A👤 *Cliente:* ${name}%0A📱 *WhatsApp:* ${phone}%0A📅 *Fecha:* ${ds}%0A🕐 *Hora:* ${t12(time)}%0A%0A💅 *Servicios:*%0A${sl}%0A%0A💰 *Total:* $${Number(total).toLocaleString('es-CO')} COP`,'_blank');
   const cp=phone.replace(/\D/g,'');
-  if(cp.length>=10) setTimeout(()=>window.open(`https://wa.me/57${cp}?text=✨ *¡Tu cita está confirmada en TS Nails Studio!*%0A%0A📅 *Fecha:* ${ds}%0A🕐 *Hora:* ${time}%0A💅 *Servicios:* ${svcs.map(s=>s.nombre||s.name).join(', ')}%0A%0A📍 Diagonal 67 #3-57, Los Muiscas, Tunja%0A⏰ Llega 5 minutos antes.%0A%0A¡Te esperamos! 💅`,'_blank'),1500);
+  if(cp.length>=10) setTimeout(()=>window.open(`https://wa.me/57${cp}?text=✨ *¡Tu cita está confirmada en TS Nails Studio!*%0A%0A📅 *Fecha:* ${ds}%0A🕐 *Hora:* ${t12(time)}%0A💅 *Servicios:* ${svcs.map(s=>s.nombre||s.name).join(', ')}%0A%0A📍 Diagonal 67 #3-57, Los Muiscas, Tunja%0A⏰ Llega 5 minutos antes.%0A%0A¡Te esperamos! 💅`,'_blank'),1500);
 }
 
 function openBookingModal(){ goStep(1); renderBookCal(); bsShow('bookingModal'); }
 function previewFile(input){ if(input.files&&input.files[0]){ const r=new FileReader(); r.onload=e=>{document.getElementById('filePreviewImg').src=e.target.result;document.getElementById('filePreview').style.display='flex';}; r.readAsDataURL(input.files[0]); } }
 
 // ── HELPERS ──
+function t12(t){
+  const[h,m]=t.split(':').map(Number);
+  const ampm=h<12?'a.m.':'p.m.';
+  const h12=h===0?12:h>12?h-12:h;
+  return h12+':'+(m<10?'0'+m:m)+' '+ampm;
+}
 function t2m(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function m2t(m){return `${Math.floor(m/60).toString().padStart(2,'0')}:${(m%60).toString().padStart(2,'0')}`;}
 function fmtDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
