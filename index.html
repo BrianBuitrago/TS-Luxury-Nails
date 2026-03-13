@@ -386,14 +386,8 @@
     <p class="eyebrow">✦ Atención</p>
     <h2 class="section-h mt-1">Horarios de <em class="text-dorado">Atención</em></h2>
     <div class="section-line"></div>
-    <div class="row g-2">
-      <div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card"><p class="eyebrow mb-1">Lunes</p><p style="font-size:0.8rem;">9:00 – 20:00</p></div></div>
-      <div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card"><p class="eyebrow mb-1">Martes</p><p style="font-size:0.8rem;">9:00 – 20:00</p></div></div>
-      <div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card"><p class="eyebrow mb-1">Miércoles</p><p style="font-size:0.8rem;">9:00 – 20:00</p></div></div>
-      <div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card"><p class="eyebrow mb-1">Jueves</p><p style="font-size:0.8rem;">9:00 – 20:00</p></div></div>
-      <div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card"><p class="eyebrow mb-1">Viernes</p><p style="font-size:0.8rem;">9:00 – 20:00</p></div></div>
-      <div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card"><p class="eyebrow mb-1">Sábado</p><p style="font-size:0.8rem;">8:00 – 12:00</p></div></div>
-      <div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card closed"><p class="eyebrow mb-1">Domingo</p><p style="font-size:0.8rem;color:var(--texto-muted);">Cerrado</p></div></div>
+    <div class="row g-2" id="horariosDisplay">
+      <div class="col-12"><p style="color:var(--texto-muted);font-size:0.84rem;">Cargando horarios...</p></div>
     </div>
   </div>
 </section>
@@ -560,17 +554,66 @@ let pubMonth=new Date().getMonth(), pubYear=new Date().getFullYear();
 let pubSelectedDate=null, pubSelectedTime=null, pubCart=[];
 let calData={};
 
-const SCHED={1:{o:'09:00',c:'20:00'},2:{o:'09:00',c:'20:00'},3:{o:'09:00',c:'20:00'},4:{o:'09:00',c:'20:00'},5:{o:'09:00',c:'20:00'},6:{o:'08:00',c:'12:00'},0:null};
+// SCHED se carga desde Firestore — dow 0=dom,1=lun,...,6=sab
+const SCHED_DEFAULT={1:{o:'09:00',c:'20:00'},2:{o:'09:00',c:'20:00'},3:{o:'09:00',c:'20:00'},4:{o:'09:00',c:'20:00'},5:{o:'09:00',c:'20:00'},6:{o:'08:00',c:'12:00'},0:null};
+let SCHED = {...SCHED_DEFAULT};
 const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const MONTHS_ES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const DAYS_ES=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
 
 // ── INIT ──
 window.addEventListener('firebaseReady', () => {
-  loadCategories(); loadServices();
+  loadSchedule(); loadCategories(); loadServices();
   renderBookCal(); renderPubCal();
   preloadMonth(pubMonth, pubYear);
 });
+
+// ── HORARIOS DESDE FIRESTORE ──
+const DOW_KEY={1:'lunes',2:'martes',3:'miercoles',4:'jueves',5:'viernes',6:'sabado',0:'domingo'};
+const DAY_LABEL={lunes:'Lunes',martes:'Martes',miercoles:'Miércoles',jueves:'Jueves',viernes:'Viernes',sabado:'Sábado',domingo:'Domingo'};
+
+async function loadSchedule() {
+  try {
+    const {db,doc,getDoc}=window._fb;
+    const snap=await getDoc(doc(db,'horarios','config'));
+    if(snap.exists()) {
+      const data=snap.data();
+      // Rebuild SCHED from Firestore data
+      SCHED={};
+      for(const [dow, key] of Object.entries(DOW_KEY)) {
+        const d=data[key];
+        if(!d||!d.activo) { SCHED[dow]=null; }
+        else { SCHED[dow]={o:d.open, c:d.close}; }
+      }
+      // Refresh calendar now that SCHED is updated
+      calData={};
+      renderPubCal();
+      preloadMonth(pubMonth, pubYear);
+      // Render schedule display
+      renderScheduleDisplay(data);
+    } else {
+      renderScheduleDisplay(null);
+    }
+  } catch(e) {
+    console.error('Error loading schedule:', e);
+    renderScheduleDisplay(null);
+  }
+}
+
+function renderScheduleDisplay(data) {
+  const container=document.getElementById('horariosDisplay');
+  const keys=['lunes','martes','miercoles','jueves','viernes','sabado','domingo'];
+  container.innerHTML=keys.map(key=>{
+    const d=data?data[key]:null;
+    const activo=d&&d.activo!==false;
+    const label=DAY_LABEL[key];
+    if(!activo||key==='domingo') {
+      return `<div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card closed"><p class="eyebrow mb-1">${label}</p><p style="font-size:0.8rem;color:var(--texto-muted);">Cerrado</p></div></div>`;
+    }
+    const open=t12(d.open); const close=t12(d.close);
+    return `<div class="col-6 col-sm-4 col-md-3 col-xl-auto"><div class="horario-card"><p class="eyebrow mb-1">${label}</p><p style="font-size:0.8rem;">${open} – ${close}</p></div></div>`;
+  }).join('');
+}
 
 // ── TOAST ──
 function toast(msg, type='info') {
