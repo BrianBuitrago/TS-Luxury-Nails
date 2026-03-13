@@ -720,8 +720,10 @@ async function selectPubDate(ds, dow) {
   if(!sched){grid.innerHTML=`<p style="color:var(--texto-muted);grid-column:span 4;font-size:0.82rem;">Cerrado este día.</p>`;return;}
   grid.innerHTML=`<div style="color:var(--texto-muted);grid-column:span 4;font-size:0.8rem;">Cargando...</div>`;
   const blocked=await getBlockedSlots(ds);
-  const slots=genSlots(sched.o,sched.c,30,30,blocked);
-  grid.innerHTML=slots.map(s=>`<div class="time-slot ${s.blocked?'blocked':''}" ${!s.blocked?`onclick="selectPubTime('${s.time}',this)"`:''} title="${s.blocked?'Reservado':'Disponible'}">${s.time}</div>`).join('');
+  window._pubBlocked=blocked; window._pubSched=sched;
+  const minDur=allServices.length>0?Math.min(...allServices.map(s=>s.duracion||60)):30;
+  const slots=genSlots(sched.o,sched.c,30,minDur,blocked);
+  grid.innerHTML=slots.map(s=>`<div class="time-slot ${s.blocked?'blocked':''}" ${!s.blocked?`onclick="selectPubTime('${s.time}',this)"`:''} title="${s.blocked?'Reservado':'Disponible'}">${t12(s.time)}</div>`).join('');
 }
 
 function selectPubTime(time, el) {
@@ -752,6 +754,25 @@ function togglePubCart(id) {
   const idx=pubCart.findIndex(c=>c.id===id);
   if(idx>-1) pubCart.splice(idx,1); else pubCart.push({id:s.id,name:s.nombre,price:s.precio,duration:s.duracion,type:'service'});
   renderPubServices(); updatePubSummary();
+  // Recalculate slots with actual total duration
+  if(window._pubBlocked!==undefined && window._pubSched) {
+    const totalDur=pubCart.reduce((a,b)=>a+(b.duration||60),0)||30;
+    const grid=document.getElementById('pubTimeGrid');
+    const prevSelected=pubSelectedTime;
+    const slots=genSlots(window._pubSched.o,window._pubSched.c,30,totalDur,window._pubBlocked);
+    grid.innerHTML=slots.map(s=>`<div class="time-slot ${s.blocked?'blocked':''}" ${!s.blocked?`onclick="selectPubTime('${s.time}',this)"`:''} title="${s.blocked?'Reservado':'Disponible'}">${t12(s.time)}</div>`).join('');
+    // Re-select previous time if still available
+    if(prevSelected){
+      const slot=slots.find(s=>s.time===prevSelected&&!s.blocked);
+      if(slot){
+        const el=Array.from(grid.querySelectorAll('.time-slot')).find(el=>el.textContent===t12(prevSelected));
+        if(el){el.classList.add('selected');}
+      } else {
+        pubSelectedTime=null;
+        document.getElementById('pubBookingForm').style.display='none';
+      }
+    }
+  }
 }
 
 function updatePubSummary() {
